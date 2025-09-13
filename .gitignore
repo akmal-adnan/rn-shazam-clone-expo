@@ -41,3 +41,8 @@ app-example
 # generated native folders
 /ios
 /android
+
+# Ignore Cursor IDE config & metadata
+.cursor/
+.cursorignore
+*.cursor

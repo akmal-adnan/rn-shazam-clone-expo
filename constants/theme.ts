@@ -1,53 +1,80 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+import { Dimensions } from 'react-native';
 
-import { Platform } from 'react-native';
+const { width, height } = Dimensions.get('window');
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
+export const COLORS = {
+  white1: '#FFFFFF',
+  white2: '#E4E4E4',
+  black1: '#000000',
+  black2: '#121212',
+  black3: '#010914',
+  black4: '#000F14',
+  black5: '#141414',
+  black6: '#252525',
+  icon1: '#D4D4D4',
+  icon2: '#949494',
+  blue1: '#0088FE',
+  blue2: '#005CCB',
+  blue3: '#066AFE',
+  blue4: '#00BAFF',
+  purple: '#6E5599',
+  peach: '#FA425A',
+  darkgrey: '#656565',
+  lightgrey: '#E4E4E4',
+  orange: '#FF9900',
 };
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-});
+export const SIZES = {
+  // global sizes
+  base: 8,
+  font: 14,
+  radius: 12,
+  padding: 24,
+
+  // font sizes
+  largeTitle: 40,
+  h1: 30,
+  h2: 22,
+  h3: 18,
+  h4: 16,
+  h5: 14,
+  body1: 30,
+  body2: 22,
+  body3: 18,
+  body4: 16,
+  body5: 14,
+
+  // app dimensions
+  width,
+  height,
+};
+
+// prettier-ignore
+export const FONTS = {
+  largeTitle: {fontFamily: 'NeueMontreal-Bold', fontSize: SIZES.largeTitle},
+  h1: {fontFamily: 'NeueMontreal-Bold', fontSize: SIZES.h1, lineHeight: 36},
+  h2: {fontFamily: 'NeueMontreal-Bold', fontSize: SIZES.h2, lineHeight: 30},
+  h3: {fontFamily: 'NeueMontreal-Bold', fontSize: SIZES.h3, lineHeight: 22},
+  h4: {fontFamily: 'NeueMontreal-Bold', fontSize: SIZES.h4, lineHeight: 22},
+  h5: {fontFamily: 'NeueMontreal-Bold', fontSize: SIZES.h5, lineHeight: 22},
+
+  m1: {fontFamily: 'NeueMontreal-Medium', fontSize: SIZES.body1, lineHeight: 36},
+  m2: {fontFamily: 'NeueMontreal-Medium', fontSize: SIZES.body2, lineHeight: 30},
+  m3: {fontFamily: 'NeueMontreal-Medium', fontSize: SIZES.body3, lineHeight: 22},
+  m4: {fontFamily: 'NeueMontreal-Medium', fontSize: SIZES.body4, lineHeight: 22},
+  m5: {fontFamily: 'NeueMontreal-Medium', fontSize: SIZES.body5, lineHeight: 22},
+
+  p1: {fontFamily: 'NeueMontreal-Regular', fontSize: SIZES.body1, lineHeight: 36},
+  p2: {fontFamily: 'NeueMontreal-Regular', fontSize: SIZES.body2, lineHeight: 30},
+  p3: {fontFamily: 'NeueMontreal-Regular', fontSize: SIZES.body3, lineHeight: 22},
+  p4: {fontFamily: 'NeueMontreal-Regular', fontSize: SIZES.body4, lineHeight: 22},
+  p5: {fontFamily: 'NeueMontreal-Regular', fontSize: SIZES.body5, lineHeight: 22},
+
+  l1: {fontFamily: 'NeueMontreal-Light', fontSize: SIZES.body1, lineHeight: 36},
+  l2: {fontFamily: 'NeueMontreal-Light', fontSize: SIZES.body2, lineHeight: 30},
+  l3: {fontFamily: 'NeueMontreal-Light', fontSize: SIZES.body3, lineHeight: 22},
+  l4: {fontFamily: 'NeueMontreal-Light', fontSize: SIZES.body4, lineHeight: 22},
+  l5: {fontFamily: 'NeueMontreal-Light', fontSize: SIZES.body5, lineHeight: 22},
+};
+
+export default { COLORS, SIZES, FONTS };

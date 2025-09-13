@@ -38,8 +38,24 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Arial-Bold-italic.ttf",
+            "./assets/fonts/Arial-Bold.ttf",
+            "./assets/fonts/Arial.ttf",
+            "./assets/fonts/NeueMontreal-Bold.ttf",
+            "./assets/fonts/NeueMontreal-Light.ttf",
+            "./assets/fonts/NeueMontreal-Medium.ttf",
+            "./assets/fonts/NeueMontreal-Regular.ttf"
+          ]
+        }
       ]
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
