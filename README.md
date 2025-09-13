@@ -4,9 +4,11 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Result Sample
 
+<p align="left">
 <img width="240" src="ReadmeImage/screenshot1.png">
 <img width="240" src="ReadmeImage/screenshot2.png">
 <img width="240" src="ReadmeImage/screenshot3.png">
+</p>
 
 ## Get started
 
