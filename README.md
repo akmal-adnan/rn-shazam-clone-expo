@@ -1,11 +1,13 @@
-# Welcome to your RN Shazam clone app 👋
+# Welcome to your React Native Shazam clone app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+
+#### This project is updated version from the old [RN-shazam-clone](https://github.com/akmal-adnan/RN-shazam-clone)
 
 ## Result Sample
 
 <p align="left">
-<video src="readme_assets/screen_record.mov" width="300" controls></video>
+<video src="readme_assets/screen_record.mp4" width="300" controls></video>
 
 <!-- <img width="240" src="readme_assets/screenshot1.png"> -->
 <!-- <img width="240" src="readme_assets/screenshot2.png"> -->
@@ -32,11 +34,14 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ---
 
+Since this project is still incomplete ~
+
 ### Todo:
 
-1. Add more pages
+1. Complete more screen
 2. Add audio player
 3. Use real data from API
+4. Code clean up
 
 ---
 
