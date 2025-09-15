@@ -12,9 +12,9 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 // import {useSelector} from 'react-redux';
-import Charts from '@/components/screen/Chart';
 import Home from '@/components/screen/Home';
 import Library from '@/components/screen/Library';
+import TopCharts from '@/components/screen/TopChart';
 import PageIndicator from '@/components/ui/PageIndicator';
 import TheDot from '@/components/ui/TheDot';
 import { SIZES } from '../constants';
@@ -45,8 +45,8 @@ const MainScreen = () => {
         component: <Home slidesRef={slidesRef} />,
       },
       {
-        key: 'charts',
-        component: <Charts />,
+        key: 'TopCharts',
+        component: <TopCharts />,
       },
     ],
     []

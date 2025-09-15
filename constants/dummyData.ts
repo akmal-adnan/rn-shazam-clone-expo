@@ -7156,7 +7156,7 @@ export const TrackYoutube = [
         width: 1280,
         height: 720,
       },
-      url: 'https://i.ytimg.com/vi/N-u9MYHYWks/maxresdefault.jpg',
+      url: 'https://www.shazam.com/mkimage/image/thumb/Music112/v4/90/93/08/909308e3-94ca-dbf8-ebc7-0177bae4b9ad/197186999980.jpg/510x510bb-60.webp',
     },
     actions: [
       {
@@ -7174,7 +7174,8 @@ export const TrackYoutube = [
             'https://is1-ssl.mzstatic.com/image/thumb/AMCArtistImages116/v4/57/fe/78/57fe7862-010e-a191-151e-896a3e00032f/a7bd0a8b-b138-4ad5-9c57-9717229fcdfd_ami-identity-0d69bafcacd7d6abbe5a41982453768b-2023-02-03T11-37-30.747Z_cropped.png/800x800cc.jpg',
           snapchat: 'https://www.shazam.com/partner/sc/track/633815114',
         },
-        uri: 'https://youtu.be/N-u9MYHYWks?autoplay=1',
+        uri: 'https://youtu.be/Dll6VJ2C7wo?si=w-BqSvb1qbMoKF6v',
+        // uri: 'https://youtu.be/N-u9MYHYWks?autoplay=1',
       },
     ],
   },

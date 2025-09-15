@@ -19,6 +19,7 @@ export const COLORS = {
   blue4: '#00BAFF',
   purple: '#6E5599',
   peach: '#FA425A',
+  peach2: '#FE7A88',
   darkgrey: '#656565',
   lightgrey: '#E4E4E4',
   orange: '#FF9900',

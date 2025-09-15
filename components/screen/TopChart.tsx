@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Charts = () => {
+const TopCharts = () => {
   const insets = useSafeAreaInsets();
 
   const renderHeader = () => (
@@ -66,7 +66,7 @@ const Charts = () => {
   );
 };
 
-export default Charts;
+export default TopCharts;
 
 const styles = StyleSheet.create({
   main__container: {

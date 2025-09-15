@@ -1,4 +1,5 @@
 import { COLORS, DATA, FONTS, SIZES } from '@/constants';
+import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CountryItem } from '../modules/CountryList';
@@ -45,6 +46,7 @@ const ChartCountryList: React.FC<ChartCountryListProps> = ({ item }) => {
               //   onPress={() =>
               //     navigation.push('SongDetails', { songId: song?.id })
               //   }
+              onPress={() => router.navigate('/SongDetails')}
               activeOpacity={0.7}
               key={song.id}
               style={{ marginRight: index < 2 ? 10 : 0 }}
