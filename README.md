@@ -8,7 +8,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 <!-- <video src="readme_assets/screen_record.mp4" width="300" controls></video> -->
 
-<img width="300" src="readme_assets/screen_record.gif">
+<img width="300" src="https://raw.githubusercontent.com/akmal-adnan/rn-shazam-clone-expo/refs/heads/main/readme_assets/screen_record.gif">
 
 <p align="left">
 <img width="240" src="readme_assets/screenshot1.png">
