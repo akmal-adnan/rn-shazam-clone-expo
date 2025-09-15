@@ -6,12 +6,15 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Result Sample
 
-<video src="readme_assets/screen_record.mp4" width="300" controls></video>
+<!-- <video src="readme_assets/screen_record.mp4" width="300" controls></video> -->
+
+<img width="300" src="readme_assets/screen_record.gif">
 
 <p align="left">
 <img width="240" src="readme_assets/screenshot1.png">
 <img width="240" src="readme_assets/screenshot2.png">
 <img width="240" src="readme_assets/screenshot3.png">
+<img width="240" src="readme_assets/screenshot4.png">
 </p>
 
 ## Get started
