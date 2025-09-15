@@ -5,9 +5,11 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 ## Result Sample
 
 <p align="left">
-<img width="240" src="ReadmeImage/screenshot1.png">
-<img width="240" src="ReadmeImage/screenshot2.png">
-<img width="240" src="ReadmeImage/screenshot3.png">
+<video src="readme_assets/record_720p.mov" width="300" controls></video>
+
+<!-- <img width="240" src="readme_assets/screenshot1.png"> -->
+<!-- <img width="240" src="readme_assets/screenshot2.png"> -->
+<!-- <img width="240" src="readme_assets/screenshot3.png"> -->
 </p>
 
 ## Get started
