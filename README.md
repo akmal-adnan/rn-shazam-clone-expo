@@ -6,9 +6,9 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Result Sample
 
-<p align="left">
-<!-- <video src="readme_assets/screen_record.mp4" width="300" controls></video> -->
+<video src="readme_assets/screen_record.mp4" width="300" controls></video>
 
+<p align="left">
 <img width="240" src="readme_assets/screenshot1.png">
 <img width="240" src="readme_assets/screenshot2.png">
 <img width="240" src="readme_assets/screenshot3.png">
