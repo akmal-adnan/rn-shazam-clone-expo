@@ -25,7 +25,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Run the app using expo go
 
    ```bash
    npx expo start
@@ -33,6 +33,28 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    or
 
    npm start
+   ```
+
+3. Run the app using without expo go
+
+   For ios:
+
+   ```
+   npx expo run:ios
+
+   or
+
+   npm run ios
+   ```
+
+   For android:
+
+   ```
+   npx expo run:android
+
+   or
+
+   npm run android
    ```
 
 ---
@@ -84,3 +106,7 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions. -->
+
+```
+
+```
