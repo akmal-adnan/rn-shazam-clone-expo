@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { SIZES } from '@/constants';
+import { SIZES } from '@/src/constants';
 // import { useGetSongVideoQuery } from '../redux/services/ShazamCore';
 
 const TrackVideo = ({ videoUrl }: any) => {

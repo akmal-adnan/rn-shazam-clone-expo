@@ -1,4 +1,4 @@
-import { COLORS, SIZES } from '@/constants';
+import { COLORS, SIZES } from '@/src/constants';
 import { Platform, StyleSheet, View } from 'react-native';
 import Animated, {
   Extrapolation,

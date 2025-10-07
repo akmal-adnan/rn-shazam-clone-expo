@@ -1,4 +1,4 @@
-import { COLORS, FONTS, SIZES, SVG } from '@/constants';
+import { COLORS, FONTS, SIZES, SVG } from '@/src/constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useCallback } from 'react';
 import {

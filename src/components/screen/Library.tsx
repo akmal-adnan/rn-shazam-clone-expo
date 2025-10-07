@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { COLORS, DATA, FONTS, SIZES, SVG } from '@/constants';
+import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import {

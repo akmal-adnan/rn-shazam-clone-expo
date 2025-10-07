@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 // import TrackPlayer from 'react-native-track-player';
-import { COLORS, DATA, FONTS, SIZES, SVG } from '@/constants';
+import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // import { useDispatch, useSelector } from 'react-redux';
 // import {

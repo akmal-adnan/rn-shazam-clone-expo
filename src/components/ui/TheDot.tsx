@@ -1,4 +1,4 @@
-import { COLORS } from '@/constants';
+import { COLORS } from '@/src/constants';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
   Extrapolation,

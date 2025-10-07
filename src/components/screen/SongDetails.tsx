@@ -1,11 +1,11 @@
-import ApplePlayButton from '@/components/ui/ApplePlayButton';
-import FloatButton from '@/components/ui/FloatButton';
-import TrackRelatedSongs from '@/components/ui/TrackRelatedSongs';
-import TrackTopSongs from '@/components/ui/TrackTopSongs';
-import TrackYoutube from '@/components/ui/TrackYoutube';
-import { COLORS, DATA, FONTS, SIZES, SVG } from '@/constants';
-import { addTracks } from '@/hooks/useAddTracks';
-import { usePlayerStore } from '@/hooks/usePlayerStore';
+import ApplePlayButton from '@/src/components/ui/ApplePlayButton';
+import FloatButton from '@/src/components/ui/FloatButton';
+import TrackRelatedSongs from '@/src/components/ui/TrackRelatedSongs';
+import TrackTopSongs from '@/src/components/ui/TrackTopSongs';
+import TrackYoutube from '@/src/components/ui/TrackYoutube';
+import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
+import { addTracks } from '@/src/hooks/useAddTracks';
+import { usePlayerStore } from '@/src/store/usePlayerStore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCom from '@expo/vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -37,7 +37,7 @@ const SongDetails = () => {
 
   const { setTracks, setCurrentTrack, setPlaying } = usePlayerStore();
   const isPlaying = usePlayerStore((state) => state.isPlaying);
-  const currentTrack = usePlayerStore((state) => state.currentTrack);
+  // const currentTrack = usePlayerStore((state) => state.currentTrack);
 
   //   const { songId } = route.params;
 

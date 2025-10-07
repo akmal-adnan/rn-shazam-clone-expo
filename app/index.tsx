@@ -1,3 +1,9 @@
+import Home from '@/src/components/screen/Home';
+import Library from '@/src/components/screen/Library';
+import TopCharts from '@/src/components/screen/TopChart';
+import PageIndicator from '@/src/components/ui/PageIndicator';
+import TheDot from '@/src/components/ui/TheDot';
+import { SIZES } from '@/src/constants';
 import React, { useMemo, useRef } from 'react';
 import {
   FlatList,
@@ -12,12 +18,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 // import {useSelector} from 'react-redux';
-import Home from '@/components/screen/Home';
-import Library from '@/components/screen/Library';
-import TopCharts from '@/components/screen/TopChart';
-import PageIndicator from '@/components/ui/PageIndicator';
-import TheDot from '@/components/ui/TheDot';
-import { SIZES } from '../constants';
 
 type ScreenItem = {
   key: string;

@@ -1,5 +1,5 @@
-import { COLORS, SIZES } from '@/constants';
-import { usePlayerStore } from '@/hooks/usePlayerStore';
+import { COLORS, SIZES } from '@/src/constants';
+import { usePlayerStore } from '@/src/store/usePlayerStore';
 import { FontAwesome6 } from '@expo/vector-icons';
 
 import React from 'react';

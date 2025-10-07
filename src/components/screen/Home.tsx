@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { COLORS, FONTS, IMAGES, SIZES, SVG } from '@/constants/index';
+import { COLORS, FONTS, IMAGES, SIZES, SVG } from '@/src/constants/index';
 import SearchIco from '@expo/vector-icons/FontAwesome';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';

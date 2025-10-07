@@ -1,4 +1,4 @@
-import { COLORS, DATA, FONTS, SIZES } from '@/constants';
+import { COLORS, DATA, FONTS, SIZES } from '@/src/constants';
 import MaterialCom from '@expo/vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import {

@@ -11,7 +11,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 // import TrackPlayer from 'react-native-track-player';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // import { useDispatch } from 'react-redux';
-import { COLORS, DATA, FONTS, SIZES, SVG } from '@/constants';
+import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
 // import { useGetTopSongRelatedQuery } from '../redux/services/ShazamCore';
 
 type Props = {

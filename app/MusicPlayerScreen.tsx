@@ -1,4 +1,4 @@
-import MusicPlayer from '@/components/screen/MusicPlayer';
+import MusicPlayer from '@/src/components/screen/MusicPlayer';
 import React from 'react';
 
 const MusicPlayerScreen = () => {

@@ -1,4 +1,4 @@
-import { COLORS, LOTTIE } from '@/constants';
+import { COLORS, LOTTIE } from '@/src/constants';
 import { router } from 'expo-router';
 import Lottie from 'lottie-react-native';
 import React from 'react';

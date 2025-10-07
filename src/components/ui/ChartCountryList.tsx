@@ -1,4 +1,4 @@
-import { COLORS, DATA, FONTS, SIZES } from '@/constants';
+import { COLORS, DATA, FONTS, SIZES } from '@/src/constants';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

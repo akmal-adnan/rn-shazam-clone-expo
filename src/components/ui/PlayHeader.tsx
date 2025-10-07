@@ -1,4 +1,4 @@
-import { COLORS, FONTS, SIZES } from '@/constants';
+import { COLORS, FONTS, SIZES } from '@/src/constants';
 import { Slider } from '@miblanchard/react-native-slider';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';

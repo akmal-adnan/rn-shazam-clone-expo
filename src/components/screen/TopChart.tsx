@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { CountryItem } from '@/components/modules/CountryList';
-import ChartCountryList from '@/components/ui/ChartCountryList';
-import { COLORS, DATA, FONTS, IMAGES, SIZES } from '@/constants';
+import { CountryItem } from '@/src/components/modules/CountryList';
+import ChartCountryList from '@/src/components/ui/ChartCountryList';
+import { COLORS, DATA, FONTS, IMAGES, SIZES } from '@/src/constants';
 import {
   FlatList,
   Image,

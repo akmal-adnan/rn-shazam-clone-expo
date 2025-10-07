@@ -1,6 +1,7 @@
-import { playbackService } from '@/constants/playbackService';
-import { useLogTrackPlayerState } from '@/hooks/useLogTrackPlayerState';
-import { useSetupTrackPlayer } from '@/hooks/useSetupTrackPlayer';
+import { playbackService } from '@/src/constants/playbackService';
+import { useLogTrackPlayerState } from '@/src/hooks/useLogTrackPlayerState';
+import { useSetupTrackPlayer } from '@/src/hooks/useSetupTrackPlayer';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
@@ -10,6 +11,8 @@ import TrackPlayer from 'react-native-track-player';
 SplashScreen.preventAutoHideAsync();
 
 TrackPlayer.registerPlaybackService(() => playbackService);
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const handleTrackPlayerLoaded = useCallback(() => {
@@ -23,16 +26,18 @@ export default function RootLayout() {
   useLogTrackPlayerState();
 
   return (
-    <SafeAreaProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="SongDetailsScreen" />
-        <Stack.Screen
-          name="MusicPlayerScreen"
-          options={{ animation: 'slide_from_bottom' }}
-        />
-      </Stack>
-      <StatusBar style="auto" />
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="SongDetailsScreen" />
+          <Stack.Screen
+            name="MusicPlayerScreen"
+            options={{ animation: 'slide_from_bottom' }}
+          />
+        </Stack>
+        <StatusBar style="auto" />
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }

@@ -1,11 +1,11 @@
-import ApplePlayButton from '@/components/ui/ApplePlayButton';
-import Header2 from '@/components/ui/Header2';
-import PlayerButton from '@/components/ui/PlayerButton';
-import PlayHeader from '@/components/ui/PlayHeader';
-import PlayRelated from '@/components/ui/PlayRelated';
-import { COLORS, SIZES } from '@/constants/theme';
-import { useGetTrackIndex } from '@/hooks/useGetTrackIndex';
-import { usePlayerStore } from '@/hooks/usePlayerStore';
+import ApplePlayButton from '@/src/components/ui/ApplePlayButton';
+import Header2 from '@/src/components/ui/Header2';
+import PlayerButton from '@/src/components/ui/PlayerButton';
+import PlayHeader from '@/src/components/ui/PlayHeader';
+import PlayRelated from '@/src/components/ui/PlayRelated';
+import { COLORS, SIZES } from '@/src/constants/theme';
+import { useGetTrackIndex } from '@/src/hooks/useGetTrackIndex';
+import { usePlayerStore } from '@/src/store/usePlayerStore';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
@@ -48,7 +48,6 @@ const MusicPlayer = () => {
   const AxisY = useSharedValue(0);
 
   const tracks = usePlayerStore((state) => state.tracks);
-  //   const [trackIndex, setTrackIndex] = useState<number>(0);
   const { trackIndex } = useGetTrackIndex();
 
   const imageUrl = tracks[trackIndex]?.images
