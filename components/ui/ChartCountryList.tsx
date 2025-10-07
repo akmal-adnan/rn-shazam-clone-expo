@@ -46,7 +46,7 @@ const ChartCountryList: React.FC<ChartCountryListProps> = ({ item }) => {
               //   onPress={() =>
               //     navigation.push('SongDetails', { songId: song?.id })
               //   }
-              onPress={() => router.navigate('/SongDetails')}
+              onPress={() => router.navigate('/SongDetailsScreen')}
               activeOpacity={0.7}
               key={song.id}
               style={{ marginRight: index < 2 ? 10 : 0 }}

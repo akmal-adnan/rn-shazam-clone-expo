@@ -1,0 +1,151 @@
+import { COLORS, FONTS, SIZES, SVG } from '@/constants';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import React, { useCallback } from 'react';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedScrollHandler,
+} from 'react-native-reanimated';
+import TrackPlayer from 'react-native-track-player';
+
+const AnimatedImage = Animated.createAnimatedComponent(Image);
+
+const PlayRelated = ({ AxisY, trackList, imageUrl }: any) => {
+  const renderSongHeader = useCallback(
+    () => (
+      <View style={styles.song__header}>
+        <AnimatedImage
+          entering={FadeIn.duration(500)}
+          exiting={FadeOut.duration(500)}
+          source={{ uri: imageUrl }}
+          resizeMode="cover"
+          style={styles.song__image}
+        />
+
+        <View style={{ justifyContent: 'space-between', paddingLeft: 16 }}>
+          <Text style={styles.song__textdesc}>
+            Listen to full songs, albums and more on Apple Music.
+          </Text>
+
+          <TouchableOpacity style={styles.apple__button}>
+            <Text style={{ color: COLORS.white1, ...FONTS.m4 }}>
+              Listen on{' '}
+            </Text>
+            <SVG.AppleMusicSVG fill={COLORS.white1} width={60} height={20} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    ),
+    [imageUrl]
+  );
+  const renderSongsList = ({ item, index }: any) => (
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={styles.song__button}
+      onPress={() => TrackPlayer.skip(index)}
+    >
+      <View>
+        <Text
+          style={{
+            ...FONTS.h3,
+            width: SIZES.width / 1.3,
+            color: COLORS.black1,
+          }}
+          numberOfLines={1}
+        >
+          {item.title}
+        </Text>
+        <Text
+          style={{
+            ...FONTS.m4,
+            width: SIZES.width / 1.3,
+            color: COLORS.black1,
+          }}
+          numberOfLines={1}
+        >
+          {item.artist}
+        </Text>
+      </View>
+
+      <TouchableOpacity activeOpacity={0.6}>
+        <Ionicons name="ellipsis-vertical" size={24} color={COLORS.icon1} />
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );
+
+  return (
+    <Animated.ScrollView
+      bounces={false}
+      overScrollMode="never"
+      nestedScrollEnabled
+      scrollEventThrottle={16}
+      onScroll={useAnimatedScrollHandler((event) => {
+        AxisY.value = event.contentOffset.y;
+      })}
+    >
+      <FlatList
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+        style={{
+          backgroundColor: COLORS.white1,
+          paddingBottom: 50,
+          minHeight: SIZES.height / 1.53,
+        }}
+        data={trackList}
+        renderItem={renderSongsList}
+        ListHeaderComponent={renderSongHeader}
+        keyExtractor={(_, index) => index.toString()}
+      />
+    </Animated.ScrollView>
+  );
+};
+
+export default PlayRelated;
+
+const styles = StyleSheet.create({
+  song__header: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingBottom: 20,
+  },
+
+  song__image: {
+    width: SIZES.width / 4,
+    height: SIZES.width / 4,
+    borderRadius: 5,
+    borderWidth: 0.5,
+    borderColor: COLORS.icon1,
+  },
+
+  song__textdesc: {
+    color: COLORS.black1,
+    ...FONTS.m4,
+    flexWrap: 'wrap',
+    width: SIZES.width / 1.55,
+  },
+
+  song__button: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    justifyContent: 'space-between',
+  },
+
+  apple__button: {
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    borderRadius: 7,
+    flexDirection: 'row',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    backgroundColor: COLORS.peach,
+  },
+});

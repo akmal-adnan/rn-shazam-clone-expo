@@ -1,10 +1,18 @@
+import ApplePlayButton from '@/components/ui/ApplePlayButton';
+import FloatButton from '@/components/ui/FloatButton';
+import TrackRelatedSongs from '@/components/ui/TrackRelatedSongs';
+import TrackTopSongs from '@/components/ui/TrackTopSongs';
+import TrackYoutube from '@/components/ui/TrackYoutube';
+import { COLORS, DATA, FONTS, SIZES, SVG } from '@/constants';
+import { addTracks } from '@/hooks/useAddTracks';
+import { usePlayerStore } from '@/hooks/usePlayerStore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCom from '@expo/vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import React from 'react';
 import {
   ImageBackground,
-  LogBox,
   StatusBar,
   StyleSheet,
   Text,
@@ -21,39 +29,16 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import {useSelector, useDispatch} from 'react-redux';
-// import TrackPlayer from 'react-native-track-player';
-import ApplePlayButton from '@/components/ui/ApplePlayButton';
-import TrackRelatedSongs from '@/components/ui/TrackRelatedSongs';
-import TrackTopSongs from '@/components/ui/TrackTopSongs';
-import TrackYoutube from '@/components/ui/TrackYoutube';
-import { COLORS, DATA, FONTS, SIZES, SVG } from '@/constants';
-import { router } from 'expo-router';
-// import {
-//   ApplePlayButton,
-//   TrackRelatedSongs,
-//   TrackTopSongs,
-//   TrackYoutube,
-//   TrackVideo,
-// } from '@/components';
-// import {
-//   useGetSongCountQuery,
-//   useGetSongDetailsQuery,
-//   useGetSongMetaDataQuery,
-//   useGetSongRelatedQuery,
-// } from '../redux/services/ShazamCore';
-// import FloatButton from '../components/FloatButton';
-// import {
-//   setCurrentTrack,
-//   setPlaying,
-//   setTracks,
-// } from '../redux/features/playerSlices';
-// import {addTracks} from '../redux/services/PlaybackService';
+import TrackPlayer from 'react-native-track-player';
 
 const SongDetails = () => {
-  LogBox.ignoreLogs([`ReactImageView: Image source "null" doesn't exist`]);
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
+
+  const { setTracks, setCurrentTrack, setPlaying } = usePlayerStore();
+  const isPlaying = usePlayerStore((state) => state.isPlaying);
+  const currentTrack = usePlayerStore((state) => state.currentTrack);
+
   //   const { songId } = route.params;
 
   //   const { data: songDetailsData } = useGetSongDetailsQuery(songId);
@@ -62,6 +47,7 @@ const SongDetails = () => {
   const newSongId = DATA.FeaturedSongs.data[0].id;
   const songMetaData = DATA.TrackDetails[0];
   const songShazamCount = DATA.TotalShazams;
+  const songTrackRelated = DATA.TrackRelated;
 
   //   const { data: songMetaData } = useGetSongMetaDataQuery(newSongId);
   //   const { data: songShazamCount } = useGetSongCountQuery(newSongId);
@@ -74,26 +60,34 @@ const SongDetails = () => {
   //   const {isPlaying, currentTrack} = useSelector(state => state.player);
   //   const dispatch = useDispatch();
 
-  //   const TRACK = songTrackRelated?.tracks
-  //     .map((track) => ({
-  //       id: track?.key,
-  //       url: track?.hub?.actions?.find((action) => action.type === 'uri').uri,
-  //       title: track?.title,
-  //       artist: track?.subtitle,
-  //       images: track?.images?.coverart,
-  //     }))
-  //     .filter((track) => track.images !== undefined && track.url !== undefined);
+  const TRACK = songTrackRelated
+    .map((track) => ({
+      id: track?.key,
+      url: track?.hub?.actions?.find((action) => action.type === 'uri')?.uri,
+      title: track?.title,
+      artist: track?.subtitle,
+      images: track?.images?.coverart,
+    }))
+    .filter((track) => track.images !== undefined && track.url !== undefined);
 
-  //   const oriTrack = {
-  //     id: songMetaData?.key,
-  //     url: songMetaData?.hub?.actions?.find((action) => action.type === 'uri')
-  //       .uri,
-  //     title: songMetaData?.title,
-  //     artist: songMetaData?.subtitle,
-  //     images: songMetaData?.images.coverart,
-  //   };
+  const oriTrack = {
+    id: songMetaData?.key,
+    url: songMetaData?.hub?.actions?.find((action) => action.type === 'uri')
+      ?.uri,
+    title: songMetaData?.title,
+    artist: songMetaData?.subtitle,
+    images: songMetaData?.images?.coverart ?? '',
+  };
 
-  //   const mergeTrack = [oriTrack].concat(TRACK);
+  const mergeTrack = [oriTrack].concat(
+    TRACK as {
+      id: string;
+      url: string | undefined;
+      title: string;
+      artist: string;
+      images: string;
+    }[]
+  );
 
   const animateHeader = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -131,28 +125,28 @@ const SongDetails = () => {
     return { opacity };
   });
 
-  //   const handlePlay = async () => {
-  //     if (currentTrack.id === songMetaData.key) {
-  //       if (!isPlaying) {
-  //         await TrackPlayer.reset();
-  //         await addTracks(mergeTrack);
-  //         dispatch(setTracks(mergeTrack));
-  //         dispatch(setCurrentTrack(oriTrack));
-  //         dispatch(setPlaying(!isPlaying));
-  //         await TrackPlayer.play();
-  //       } else {
-  //         dispatch(setPlaying(!isPlaying));
-  //         await TrackPlayer.pause();
-  //       }
-  //     } else {
-  //       await TrackPlayer.reset();
-  //       await addTracks(mergeTrack);
-  //       dispatch(setTracks(mergeTrack));
-  //       dispatch(setCurrentTrack(oriTrack));
-  //       dispatch(setPlaying(true));
-  //       await TrackPlayer.play();
-  //     }
-  //   };
+  const handlePlay = async () => {
+    if ('633815114' === songMetaData.key) {
+      if (!isPlaying) {
+        await TrackPlayer.reset();
+        await addTracks(mergeTrack);
+        setTracks(mergeTrack);
+        setCurrentTrack(oriTrack);
+        setPlaying(!isPlaying);
+        await TrackPlayer.play();
+      } else {
+        setPlaying(!isPlaying);
+        await TrackPlayer.pause();
+      }
+    } else {
+      await TrackPlayer.reset();
+      await addTracks(mergeTrack);
+      setTracks(mergeTrack);
+      setCurrentTrack(oriTrack);
+      setPlaying(true);
+      await TrackPlayer.play();
+    }
+  };
 
   const renderHeader = () => (
     <Animated.View
@@ -249,7 +243,8 @@ const SongDetails = () => {
         </View>
 
         <TouchableOpacity
-          //   onPress={handlePlay}
+          onPress={handlePlay}
+          //   onPress={() => router.navigate('/MusicPlayerScreen')}
           activeOpacity={0.7}
           style={{
             backgroundColor: 'rgba(212,212,212,0.13)',
@@ -262,7 +257,7 @@ const SongDetails = () => {
             marginBottom: 55,
           }}
         >
-          {/* {songMetaData?.key === currentTrack.id ? (
+          {songMetaData?.key === '633815114' ? (
             <Ionicons
               name={isPlaying ? 'pause' : 'play'}
               size={21}
@@ -270,10 +265,7 @@ const SongDetails = () => {
             />
           ) : (
             <Ionicons name="play" size={21} color={COLORS.white1} />
-          )} */}
-
-          {/* Delete later */}
-          <Ionicons name="play" size={21} color={COLORS.white1} />
+          )}
         </TouchableOpacity>
       </View>
 
@@ -425,10 +417,7 @@ const SongDetails = () => {
         </Animated.View>
       </Animated.ScrollView>
 
-      {/* {
-        // for animated float buton
-        isPlaying ? <FloatButton navigation={navigation} /> : <View />
-      } */}
+      {isPlaying && <FloatButton />}
     </ImageBackground>
   );
 };
