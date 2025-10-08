@@ -11,7 +11,8 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 // import TrackPlayer from 'react-native-track-player';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // import { useDispatch } from 'react-redux';
-import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
+import { COLORS, FONTS, SIZES, SVG } from '@/src/constants';
+import { useGetTrackTopFeatured } from '@/src/hooks/apiQuery/useGetTrackTopFeatured';
 // import { useGetTopSongRelatedQuery } from '../redux/services/ShazamCore';
 
 type Props = {
@@ -22,7 +23,9 @@ const TrackTopSongs = ({ adamid }: Props) => {
   //   const { data: topSong } = useGetTopSongRelatedQuery(adamid);
   //   const { isPlaying, currentTrack } = useSelector((state) => state.player);
   //   const dispatch = useDispatch();
-  const topSong = DATA.FeaturedSongs;
+  // const topSong = DATA.FeaturedSongs;
+
+  const { data: topSong } = useGetTrackTopFeatured(Number(adamid));
 
   const TRACK = topSong?.data[0].views['top-songs'].data
     .map((track) => ({

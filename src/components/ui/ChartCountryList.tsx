@@ -31,7 +31,7 @@ const ChartCountryList: React.FC<Props> = ({ item }) => {
           //     })
           //   }
 
-          onPress={() => router.push('/trackChart/123')}
+          onPress={() => router.navigate('/TrackChart/123')}
         >
           <Text style={styles.see__all}>See all</Text>
         </TouchableOpacity>
@@ -45,10 +45,7 @@ const ChartCountryList: React.FC<Props> = ({ item }) => {
 
           return (
             <TouchableOpacity
-              //   onPress={() =>
-              //     navigation.push('SongDetails', { songId: song?.id })
-              //   }
-              onPress={() => router.navigate('/SongDetailsScreen')}
+              onPress={() => router.navigate(`/SongDetails/${song.id}`)}
               activeOpacity={0.7}
               key={song.id}
               style={{ marginRight: index < 2 ? 10 : 0 }}

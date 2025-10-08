@@ -16,7 +16,7 @@ export const queryKeys = {
   trackTopFeatured: (id: number) => ['trackTopFeatured', id],
 
   //  Id from tack details
-  trackRelated: (id: number, startFrom: number, pageSize: number) => [
+  trackRelated: (id: number, startFrom?: number, pageSize?: number) => [
     'trackRelated',
     id,
     startFrom,

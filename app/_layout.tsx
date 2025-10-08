@@ -30,7 +30,6 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
-          <Stack.Screen name="SongDetailsScreen" />
           <Stack.Screen
             name="MusicPlayerScreen"
             options={{ animation: 'slide_from_bottom' }}

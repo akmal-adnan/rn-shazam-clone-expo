@@ -1,0 +1,323 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
+import React from 'react';
+import {
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Animated, {
+  FadeIn,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
+
+import TrackPlayer from 'react-native-track-player';
+import { useDispatch, useSelector } from 'react-redux';
+import { Header } from '../components';
+import FloatButton from '../components/FloatButton';
+import { COLORS, FONTS, SIZES, SVG } from '../constants';
+import {
+  setCurrentTrack,
+  setPlaying,
+  setTracks,
+} from '../redux/features/playerSlices';
+import { addTracks } from '../redux/services/PlaybackService';
+import { useGetTopChartsQuery } from '../redux/services/ShazamCore';
+
+const ReanimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
+const SubCharts = ({ navigation, route }) => {
+  const scrollY = useSharedValue(0);
+  const { country, listid } = route.params;
+
+  const { data } = useGetTopChartsQuery({
+    listid,
+    limitCount: 20,
+  });
+
+  const { isPlaying, currentTrack } = useSelector((state) => state.player);
+  const dispatch = useDispatch();
+
+  const TRACK = data?.data
+    .map((track) => ({
+      id: track?.id,
+      url: track?.attributes.previews[0].url,
+      title: track?.attributes.name,
+      artist: track?.attributes.artistName,
+      images: track?.attributes.artwork.url
+        .replace('{w}', '400')
+        .replace('{h}', '400'),
+    }))
+    .filter((track) => track.images !== undefined && track.url !== undefined);
+
+  const handlePlay = async (oriTrack, uniqueTracks) => {
+    if (currentTrack.id === oriTrack.id) {
+      if (!isPlaying) {
+        await TrackPlayer.reset();
+        await addTracks(uniqueTracks);
+        dispatch(setTracks(uniqueTracks));
+        dispatch(setCurrentTrack(oriTrack));
+        dispatch(setPlaying(!isPlaying));
+        await TrackPlayer.play();
+      } else {
+        dispatch(setPlaying(!isPlaying));
+        await TrackPlayer.pause();
+      }
+    } else {
+      await TrackPlayer.reset();
+      await addTracks(uniqueTracks);
+      dispatch(setTracks(uniqueTracks));
+      dispatch(setCurrentTrack(oriTrack));
+      dispatch(setPlaying(true));
+      await TrackPlayer.play();
+    }
+  };
+
+  const renderButton = () => (
+    <View style={{ paddingVertical: 15, alignItems: 'center' }}>
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={{
+          paddingVertical: 14,
+          paddingHorizontal: 120,
+          backgroundColor: COLORS.blue1,
+          borderRadius: 8,
+        }}
+      >
+        <Text style={{ ...FONTS.h4, color: COLORS.white1 }}>Play All</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderItem = ({ item, index }) => {
+    const imageUrl = item?.attributes?.artwork.url
+      .replace('{w}', '400')
+      .replace('{h}', '400');
+
+    const oriTrack = {
+      id: item?.id,
+      url: item?.attributes.previews[0].url,
+      title: item?.attributes.name,
+      artist: item?.attributes.artistName,
+      images: imageUrl,
+    };
+
+    const mergeTrack = [oriTrack].concat(TRACK);
+    const uniqueTracks = mergeTrack.filter(
+      (track, index2, self) =>
+        self.findIndex((t) => t.id === track.id) === index2
+    );
+
+    return (
+      <Animated.View entering={FadeIn}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.push('SongDetails', {
+              songId: item?.id,
+              songImage: imageUrl,
+            })
+          }
+          onLongPress={() => console.log('Multiselect action')}
+          activeOpacity={0.7}
+          style={{
+            flexDirection: 'row',
+            paddingVertical: 16,
+            paddingHorizontal: 16,
+            position: 'relative',
+          }}
+        >
+          <ImageBackground
+            source={{
+              uri: imageUrl,
+            }}
+            resizeMode="contain"
+            imageStyle={{ borderRadius: 5 }}
+            style={styles.song__cover}
+          >
+            <View
+              style={{
+                borderRadius: 5,
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '22%',
+                height: '22%',
+              }}
+            >
+              <Text style={{ ...FONTS.m4, fontSize: 14, color: COLORS.white1 }}>
+                {index + 1}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => handlePlay(oriTrack, uniqueTracks)}
+              activeOpacity={0.7}
+              style={{
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                borderRadius: 100,
+                padding: 14,
+                marginTop: 10,
+              }}
+            >
+              {item.id === currentTrack.id ? (
+                <Ionicons
+                  name={isPlaying ? 'pause' : 'play'}
+                  size={18}
+                  color={COLORS.white1}
+                />
+              ) : (
+                <Ionicons name="play" size={18} color={COLORS.white1} />
+              )}
+            </TouchableOpacity>
+          </ImageBackground>
+
+          {/* Descripiton */}
+          <View
+            style={{
+              flex: 1,
+              marginLeft: 16,
+              justifyContent: 'space-between',
+            }}
+          >
+            <View>
+              <Text numberOfLines={1} style={styles.song__title}>
+                {item?.attributes.name}
+              </Text>
+              <Text numberOfLines={1} style={styles.song__subtitle}>
+                {item?.attributes.artistName}
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={{
+                  paddingHorizontal: 9,
+                  paddingVertical: 5,
+                  borderRadius: 20,
+                  backgroundColor: COLORS.black6,
+                  bottom: 0,
+                }}
+              >
+                <SVG.AppleMusicSVG
+                  width={50}
+                  height={15}
+                  fill={COLORS.white1}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity activeOpacity={0.5} style={{ marginRight: -5 }}>
+                <Ionicons
+                  name="ellipsis-vertical"
+                  size={24}
+                  color={COLORS.icon1}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                bottom: 0,
+                width: '100%',
+                borderColor: COLORS.lightgrey,
+                position: 'absolute',
+                borderBottomWidth: 1,
+                marginBottom: -15,
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+
+  return (
+    <View style={styles.main__container}>
+      <Header navigation={navigation} country={country} scrollY={scrollY} />
+
+      <ReanimatedFlatList
+        ListHeaderComponent={renderButton}
+        contentContainerStyle={{ paddingBottom: 50 }}
+        bounces={false}
+        scrollEventThrottle={16}
+        data={data?.data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        onScroll={useAnimatedScrollHandler((event) => {
+          scrollY.value = event.contentOffset.y;
+        })}
+      />
+
+      {isPlaying && <FloatButton navigation={navigation} />}
+    </View>
+  );
+};
+
+export default SubCharts;
+
+const styles = StyleSheet.create({
+  main__container: {
+    flex: 1,
+    backgroundColor: COLORS.white1,
+  },
+
+  shadow: {
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 2,
+
+    elevation: 5,
+  },
+
+  header__container: {
+    zIndex: 2,
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.white1,
+    paddingHorizontal: 16,
+    height: 106,
+  },
+
+  header__text: {
+    ...FONTS.m3,
+    paddingLeft: 30,
+    color: COLORS.black1,
+  },
+
+  song__cover: {
+    width: SIZES.width / 3.3,
+    height: SIZES.width / 3.3,
+  },
+
+  song__title: {
+    ...FONTS.m4,
+    fontSize: 16,
+    color: COLORS.black1,
+    width: SIZES.width / 2,
+  },
+
+  song__subtitle: {
+    ...FONTS.p4,
+    fontSize: 15,
+    color: COLORS.icon2,
+    paddingTop: 2,
+    width: SIZES.width / 2,
+  },
+});

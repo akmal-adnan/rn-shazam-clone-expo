@@ -1,5 +1,6 @@
 import { queryKeys } from '@/src/api/queryKeys';
 import shazamClient from '@/src/api/shazamClient';
+import { TrackRelatedResponse } from '@/src/components/modules/TrackRelated';
 import { useQuery } from '@tanstack/react-query';
 
 type Props = {
@@ -13,7 +14,7 @@ const fetchTopCountrySongs = async ({
   id,
   startFrom = 0,
   pageSize = 10,
-}: Props) => {
+}: Props): Promise<TrackRelatedResponse> => {
   const { data } = await shazamClient.get(
     `shazam/v3/en-US/MY/web/-/tracks/track-similarities-id-${id}?startFrom=${startFrom}&pageSize=${pageSize}`,
     {

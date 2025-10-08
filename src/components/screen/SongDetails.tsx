@@ -4,7 +4,10 @@ import TrackRelatedSongs from '@/src/components/ui/TrackRelatedSongs';
 import TrackTopSongs from '@/src/components/ui/TrackTopSongs';
 import TrackYoutube from '@/src/components/ui/TrackYoutube';
 import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
-import { addTracks } from '@/src/hooks/useAddTracks';
+import { useGetTrackDetails } from '@/src/hooks/apiQuery/useGetTrackDetails';
+import { useGetTrackMetaData } from '@/src/hooks/apiQuery/useGetTrackMetaData';
+import { useGetTrackRelated } from '@/src/hooks/apiQuery/useGetTrackRelated';
+import { useHandlePlayTracks } from '@/src/hooks/useHandlePlayTracks';
 import { usePlayerStore } from '@/src/store/usePlayerStore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCom from '@expo/vector-icons/MaterialCommunityIcons';
@@ -29,65 +32,28 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import TrackPlayer from 'react-native-track-player';
 
-const SongDetails = () => {
+type Props = {
+  id: number;
+};
+
+const TrackInfo = ['Album', 'Label', 'Released'];
+
+const SongDetails = ({ id }: Props) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
-
-  const { setTracks, setCurrentTrack, setPlaying } = usePlayerStore();
   const isPlaying = usePlayerStore((state) => state.isPlaying);
-  // const currentTrack = usePlayerStore((state) => state.currentTrack);
 
-  //   const { songId } = route.params;
-
-  //   const { data: songDetailsData } = useGetSongDetailsQuery(songId);
-  //   const newSongId = songDetailsData?.data[0].id;
-
-  const newSongId = DATA.FeaturedSongs.data[0].id;
-  const songMetaData = DATA.TrackDetails[0];
+  const { data: trackDetails } = useGetTrackDetails(id);
+  const trackDetailsId = Number(trackDetails?.data[0].id);
+  const { data: trackMetaData } = useGetTrackMetaData(trackDetailsId);
+  const { data: trackRelated } = useGetTrackRelated({ id: trackDetailsId });
   const songShazamCount = DATA.TotalShazams;
-  const songTrackRelated = DATA.TrackRelated;
 
-  //   const { data: songMetaData } = useGetSongMetaDataQuery(newSongId);
-  //   const { data: songShazamCount } = useGetSongCountQuery(newSongId);
-  //   const { data: songTrackRelated } = useGetSongRelatedQuery({
-  //     songid: newSongId,
-  //     startFrom: 0,
-  //     pageSize: 10,
-  //   });
-
-  //   const {isPlaying, currentTrack} = useSelector(state => state.player);
-  //   const dispatch = useDispatch();
-
-  const TRACK = songTrackRelated
-    .map((track) => ({
-      id: track?.key,
-      url: track?.hub?.actions?.find((action) => action.type === 'uri')?.uri,
-      title: track?.title,
-      artist: track?.subtitle,
-      images: track?.images?.coverart,
-    }))
-    .filter((track) => track.images !== undefined && track.url !== undefined);
-
-  const oriTrack = {
-    id: songMetaData?.key,
-    url: songMetaData?.hub?.actions?.find((action) => action.type === 'uri')
-      ?.uri,
-    title: songMetaData?.title,
-    artist: songMetaData?.subtitle,
-    images: songMetaData?.images?.coverart ?? '',
-  };
-
-  const mergeTrack = [oriTrack].concat(
-    TRACK as {
-      id: string;
-      url: string | undefined;
-      title: string;
-      artist: string;
-      images: string;
-    }[]
-  );
+  const { handlePlayTracks } = useHandlePlayTracks({
+    trackRelated,
+    trackMetaData,
+  });
 
   const animateHeader = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -125,28 +91,28 @@ const SongDetails = () => {
     return { opacity };
   });
 
-  const handlePlay = async () => {
-    if ('633815114' === songMetaData.key) {
-      if (!isPlaying) {
-        await TrackPlayer.reset();
-        await addTracks(mergeTrack);
-        setTracks(mergeTrack);
-        setCurrentTrack(oriTrack);
-        setPlaying(!isPlaying);
-        await TrackPlayer.play();
-      } else {
-        setPlaying(!isPlaying);
-        await TrackPlayer.pause();
-      }
-    } else {
-      await TrackPlayer.reset();
-      await addTracks(mergeTrack);
-      setTracks(mergeTrack);
-      setCurrentTrack(oriTrack);
-      setPlaying(true);
-      await TrackPlayer.play();
-    }
-  };
+  // const handlePlay = async () => {
+  //   if (currentTrack?.id === trackMetaData?.key) {
+  //     if (!isPlaying) {
+  //       await TrackPlayer.reset();
+  //       await addTracks(mergeTrack);
+  //       setTracks(mergeTrack);
+  //       setCurrentTrack(oriTrack);
+  //       setPlaying(!isPlaying);
+  //       await TrackPlayer.play();
+  //     } else {
+  //       setPlaying(!isPlaying);
+  //       await TrackPlayer.pause();
+  //     }
+  //   } else {
+  //     await TrackPlayer.reset();
+  //     await addTracks(mergeTrack);
+  //     setTracks(mergeTrack);
+  //     setCurrentTrack(oriTrack);
+  //     setPlaying(true);
+  //     await TrackPlayer.play();
+  //   }
+  // };
 
   const renderHeader = () => (
     <Animated.View
@@ -165,7 +131,7 @@ const SongDetails = () => {
           numberOfLines={1}
           style={[titleOpacity, styles.header__title]}
         >
-          {songMetaData?.title}
+          {trackMetaData?.title}
         </Animated.Text>
       </View>
 
@@ -220,10 +186,17 @@ const SongDetails = () => {
               maxWidth: SIZES.width / 1.3,
             }}
           >
-            {songMetaData?.title}
+            {trackMetaData?.title}
           </Text>
-          <Text style={{ color: COLORS.icon2, ...FONTS.p4, paddingBottom: 5 }}>
-            {songMetaData?.subtitle}
+          <Text
+            style={{
+              color: COLORS.icon2,
+              ...FONTS.p4,
+              paddingBottom: 5,
+              maxWidth: SIZES.width / 1.5,
+            }}
+          >
+            {trackMetaData?.subtitle}
           </Text>
 
           <View
@@ -243,8 +216,7 @@ const SongDetails = () => {
         </View>
 
         <TouchableOpacity
-          onPress={handlePlay}
-          //   onPress={() => router.navigate('/MusicPlayerScreen')}
+          onPress={handlePlayTracks}
           activeOpacity={0.7}
           style={{
             backgroundColor: 'rgba(212,212,212,0.13)',
@@ -257,15 +229,11 @@ const SongDetails = () => {
             marginBottom: 55,
           }}
         >
-          {songMetaData?.key === '633815114' ? (
-            <Ionicons
-              name={isPlaying ? 'pause' : 'play'}
-              size={21}
-              color={COLORS.white1}
-            />
-          ) : (
-            <Ionicons name="play" size={21} color={COLORS.white1} />
-          )}
+          <Ionicons
+            name={isPlaying ? 'pause' : 'play'}
+            size={21}
+            color={COLORS.white1}
+          />
         </TouchableOpacity>
       </View>
 
@@ -288,35 +256,27 @@ const SongDetails = () => {
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={styles.trackinfo__label}>Track :</Text>
-        <Text style={styles.trackinfo__text}>{songMetaData?.title}</Text>
+        <Text style={styles.trackinfo__text}>{trackMetaData?.title}</Text>
       </View>
 
       <View style={{ height: 1, backgroundColor: COLORS.black6 }} />
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={styles.trackinfo__label}>Album :</Text>
-        <Text style={styles.trackinfo__text}>
-          {songMetaData?.sections?.[0]?.metadata?.[0]?.text}
-        </Text>
-      </View>
+      {TrackInfo.map((item, index) => (
+        <React.Fragment key={`${item}-${index}`}>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <Text style={styles.trackinfo__label}>{item} :</Text>
+            <Text style={styles.trackinfo__text}>
+              {trackMetaData?.sections?.[0]?.metadata?.[index]?.text}
+            </Text>
+          </View>
 
-      <View style={{ height: 1, backgroundColor: COLORS.black6 }} />
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={styles.trackinfo__label}>Label :</Text>
-        <Text style={styles.trackinfo__text}>
-          {songMetaData?.sections?.[0]?.metadata?.[1]?.text}
-        </Text>
-      </View>
-
-      <View style={{ height: 1, backgroundColor: COLORS.black6 }} />
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={styles.trackinfo__label}>Released :</Text>
-        <Text style={styles.trackinfo__text}>
-          {songMetaData?.sections?.[0]?.metadata?.[2]?.text}
-        </Text>
-      </View>
+          {index !== 2 && (
+            <View style={{ height: 1, backgroundColor: COLORS.black6 }} />
+          )}
+        </React.Fragment>
+      ))}
     </View>
   );
 
@@ -346,7 +306,7 @@ const SongDetails = () => {
   return (
     <ImageBackground
       source={{
-        uri: songMetaData?.images?.background,
+        uri: trackMetaData?.images?.background,
       }}
       resizeMode="cover"
       imageStyle={{
@@ -378,7 +338,7 @@ const SongDetails = () => {
       {/* For auto video player */}
       <Animated.View entering={FadeIn.delay(1200)}>
         {/* <TrackVideo
-          videoUrl={songMetaData?.highlightsurls?.trackhighlighturl}
+          videoUrl={trackMetaData??.highlightsurls?.trackhighlighturl}
         /> */}
       </Animated.View>
 
@@ -392,23 +352,21 @@ const SongDetails = () => {
         {renderItemTop()}
 
         <Animated.View layout={LinearTransition}>
-          {songMetaData?.artists[0].adamid && (
-            <TrackTopSongs
-            //   adamid={songMetaData?.artists[0].adamid}
-            />
+          {trackMetaData?.artists[0].adamid && (
+            <TrackTopSongs adamid={trackMetaData.artists[0].adamid} />
           )}
         </Animated.View>
 
         <Animated.View layout={LinearTransition}>
-          {songMetaData?.sections[2] && (
+          {trackMetaData?.sections[2] && (
             <TrackYoutube
-            // url={songMetaData?.sections[2].youtubeurl}
+            // url={trackMetaData??.sections[2].youtubeurl}
             />
           )}
         </Animated.View>
 
         <Animated.View layout={LinearTransition}>
-          {newSongId && <TrackRelatedSongs />}
+          <TrackRelatedSongs />
         </Animated.View>
 
         <Animated.View layout={LinearTransition}>
