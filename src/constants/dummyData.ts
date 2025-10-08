@@ -1,4 +1,4 @@
-import { CountryItem } from '@/components/modules/CountryList';
+import { CountryItem } from '@/src/components/modules/CountryList';
 
 export const TopSong = [
   {

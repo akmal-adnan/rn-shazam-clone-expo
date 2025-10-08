@@ -1,21 +1,21 @@
-import { COLORS, DATA, FONTS, SIZES } from '@/src/constants';
+import { COLORS, FONTS, SIZES } from '@/src/constants';
+import { useGetTopTrackCharts } from '@/src/hooks/apiQuery/useGetTopTrackCharts';
 import { router } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CountryItem } from '../modules/CountryList';
-// import { useGetTopChartsQuery } from '../redux/services/ShazamCore';
 
-type ChartCountryListProps = {
+type Props = {
   item: CountryItem;
 };
 
-const ChartCountryList: React.FC<ChartCountryListProps> = ({ item }) => {
-  //   const { data } = useGetTopChartsQuery({
-  //     listid: item.listid,
-  //     limitCount: 3,
-  //   });
+const ChartCountryList: React.FC<Props> = ({ item }) => {
+  const { data: DATA } = useGetTopTrackCharts({
+    countryId: item.listid,
+    limit: 3,
+  });
 
-  const topData = DATA.TopSong[0].data.slice(0, 3);
+  const topTrackData = DATA?.data;
 
   return (
     <View key={item.key} style={[styles.charts__group, styles.shadow2]}>
@@ -30,13 +30,15 @@ const ChartCountryList: React.FC<ChartCountryListProps> = ({ item }) => {
           //       listid: item?.listid,
           //     })
           //   }
+
+          onPress={() => router.push('/trackChart/123')}
         >
           <Text style={styles.see__all}>See all</Text>
         </TouchableOpacity>
       </View>
 
       <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
-        {topData.map((song, index) => {
+        {topTrackData?.map((song, index) => {
           const imageUrl = song?.attributes?.artwork.url
             .replace('{w}', '400')
             .replace('{h}', '400');
