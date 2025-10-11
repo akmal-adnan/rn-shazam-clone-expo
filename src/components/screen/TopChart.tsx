@@ -2,7 +2,9 @@ import React from 'react';
 
 import { CountryItem } from '@/src/components/modules/CountryList';
 import ChartCountryList from '@/src/components/ui/ChartCountryList';
+import FloatButton from '@/src/components/ui/FloatButton';
 import { COLORS, DATA, FONTS, IMAGES, SIZES } from '@/src/constants';
+import { usePlayerStore } from '@/src/store/usePlayerStore';
 import {
   FlatList,
   Image,
@@ -16,6 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TopCharts = () => {
   const insets = useSafeAreaInsets();
+  const isPlaying = usePlayerStore((state) => state.isPlaying);
 
   const renderHeader = () => (
     <View
@@ -62,6 +65,8 @@ const TopCharts = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.key.toString()}
       />
+
+      {isPlaying && <FloatButton />}
     </View>
   );
 };

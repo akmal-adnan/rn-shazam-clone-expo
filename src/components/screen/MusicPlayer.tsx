@@ -51,8 +51,8 @@ const MusicPlayer = () => {
   const { trackIndex } = useGetTrackIndex();
 
   const imageUrl = tracks[trackIndex]?.images
-    ?.replace('400', 800)
-    ?.replace('400', 800);
+    ?.replace('400', '800')
+    ?.replace('400', '800');
 
   useEffect(() => {
     setTimeout(() => {

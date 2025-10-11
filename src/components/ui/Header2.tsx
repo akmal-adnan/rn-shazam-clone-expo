@@ -1,4 +1,5 @@
 import { COLORS, FONTS, SIZES } from '@/src/constants';
+import { CurrentTrackProps } from '@/src/store/usePlayerStore';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -6,7 +7,12 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Header2 = ({ trackList, trackIndex }: any) => {
+type Props = {
+  trackList: CurrentTrackProps[];
+  trackIndex: number;
+};
+
+const Header2 = ({ trackList, trackIndex }: Props) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -44,6 +50,7 @@ const Header2 = ({ trackList, trackIndex }: any) => {
               color: COLORS.white1,
               ...FONTS.m5,
               maxWidth: SIZES.width / 1.3,
+              textAlign: 'center',
             }}
           >
             {trackList[trackIndex]?.artist}

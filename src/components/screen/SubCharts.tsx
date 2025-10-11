@@ -14,67 +14,46 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import TrackPlayer from 'react-native-track-player';
-import { useDispatch, useSelector } from 'react-redux';
-import { Header } from '../components';
-import FloatButton from '../components/FloatButton';
-import { COLORS, FONTS, SIZES, SVG } from '../constants';
-import {
-  setCurrentTrack,
-  setPlaying,
-  setTracks,
-} from '../redux/features/playerSlices';
-import { addTracks } from '../redux/services/PlaybackService';
-import { useGetTopChartsQuery } from '../redux/services/ShazamCore';
+import FloatButton from '@/src/components/ui/FloatButton';
+import Header from '@/src/components/ui/Header';
+import { COLORS, FONTS, SIZES, SVG } from '@/src/constants';
+import { useGetTopTrackCharts } from '@/src/hooks/apiQuery/useGetTopTrackCharts';
+import { useGetTrackMetaData } from '@/src/hooks/apiQuery/useGetTrackMetaData';
+import { useGetTrackRelated } from '@/src/hooks/apiQuery/useGetTrackRelated';
+import { useHandlePlayTracks } from '@/src/hooks/useHandlePlayTracks';
+import { usePlayerStore } from '@/src/store/usePlayerStore';
+import { router } from 'expo-router';
+import { Song } from '../modules/TrackTopCharts';
 
-const ReanimatedFlatList = Animated.createAnimatedComponent(FlatList);
+const ReanimatedFlatList = Animated.createAnimatedComponent(FlatList<Song>);
 
-const SubCharts = ({ navigation, route }) => {
+type Props = {
+  countryId: string;
+  country: string;
+};
+
+type RenderProps = {
+  item: Song;
+  index: number;
+};
+
+const SubCharts = ({ countryId, country }: Props) => {
   const scrollY = useSharedValue(0);
-  const { country, listid } = route.params;
+  const isPlaying = usePlayerStore((state) => state.isPlaying);
 
-  const { data } = useGetTopChartsQuery({
-    listid,
-    limitCount: 20,
+  const trackDetailsId = 828086589; // Since free api is reached use this
+  const { data: trackMetaData } = useGetTrackMetaData(trackDetailsId);
+  const { data: trackRelated } = useGetTrackRelated({ id: trackDetailsId });
+
+  const { data: trackList } = useGetTopTrackCharts({
+    countryId,
+    limit: 20,
   });
 
-  const { isPlaying, currentTrack } = useSelector((state) => state.player);
-  const dispatch = useDispatch();
-
-  const TRACK = data?.data
-    .map((track) => ({
-      id: track?.id,
-      url: track?.attributes.previews[0].url,
-      title: track?.attributes.name,
-      artist: track?.attributes.artistName,
-      images: track?.attributes.artwork.url
-        .replace('{w}', '400')
-        .replace('{h}', '400'),
-    }))
-    .filter((track) => track.images !== undefined && track.url !== undefined);
-
-  const handlePlay = async (oriTrack, uniqueTracks) => {
-    if (currentTrack.id === oriTrack.id) {
-      if (!isPlaying) {
-        await TrackPlayer.reset();
-        await addTracks(uniqueTracks);
-        dispatch(setTracks(uniqueTracks));
-        dispatch(setCurrentTrack(oriTrack));
-        dispatch(setPlaying(!isPlaying));
-        await TrackPlayer.play();
-      } else {
-        dispatch(setPlaying(!isPlaying));
-        await TrackPlayer.pause();
-      }
-    } else {
-      await TrackPlayer.reset();
-      await addTracks(uniqueTracks);
-      dispatch(setTracks(uniqueTracks));
-      dispatch(setCurrentTrack(oriTrack));
-      dispatch(setPlaying(true));
-      await TrackPlayer.play();
-    }
-  };
+  const { handlePlayTracks } = useHandlePlayTracks({
+    trackRelated,
+    trackMetaData,
+  });
 
   const renderButton = () => (
     <View style={{ paddingVertical: 15, alignItems: 'center' }}>
@@ -92,35 +71,23 @@ const SubCharts = ({ navigation, route }) => {
     </View>
   );
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item, index }: RenderProps) => {
     const imageUrl = item?.attributes?.artwork.url
       .replace('{w}', '400')
       .replace('{h}', '400');
 
-    const oriTrack = {
-      id: item?.id,
-      url: item?.attributes.previews[0].url,
-      title: item?.attributes.name,
-      artist: item?.attributes.artistName,
-      images: imageUrl,
-    };
-
-    const mergeTrack = [oriTrack].concat(TRACK);
-    const uniqueTracks = mergeTrack.filter(
-      (track, index2, self) =>
-        self.findIndex((t) => t.id === track.id) === index2
-    );
-
     return (
       <Animated.View entering={FadeIn}>
         <TouchableOpacity
-          onPress={() =>
-            navigation.push('SongDetails', {
-              songId: item?.id,
-              songImage: imageUrl,
-            })
-          }
-          onLongPress={() => console.log('Multiselect action')}
+          // onPress={() =>
+          //   navigation.push('SongDetails', {
+          //     songId: item?.id,
+          //     songImage: imageUrl,
+          //   })
+          // }
+          // onLongPress={() => console.log('Multiselect action')}
+
+          onPress={() => router.push(`/SongDetails/${item.id}`)}
           activeOpacity={0.7}
           style={{
             flexDirection: 'row',
@@ -153,7 +120,7 @@ const SubCharts = ({ navigation, route }) => {
             </View>
 
             <TouchableOpacity
-              onPress={() => handlePlay(oriTrack, uniqueTracks)}
+              onPress={() => handlePlayTracks()}
               activeOpacity={0.7}
               style={{
                 backgroundColor: 'rgba(0,0,0,0.6)',
@@ -164,15 +131,11 @@ const SubCharts = ({ navigation, route }) => {
                 marginTop: 10,
               }}
             >
-              {item.id === currentTrack.id ? (
-                <Ionicons
-                  name={isPlaying ? 'pause' : 'play'}
-                  size={18}
-                  color={COLORS.white1}
-                />
-              ) : (
-                <Ionicons name="play" size={18} color={COLORS.white1} />
-              )}
+              <Ionicons
+                name={isPlaying ? 'pause' : 'play'}
+                size={18}
+                color={COLORS.white1}
+              />
             </TouchableOpacity>
           </ImageBackground>
 
@@ -244,22 +207,22 @@ const SubCharts = ({ navigation, route }) => {
 
   return (
     <View style={styles.main__container}>
-      <Header navigation={navigation} country={country} scrollY={scrollY} />
+      <Header country={country} scrollY={scrollY} />
 
       <ReanimatedFlatList
         ListHeaderComponent={renderButton}
         contentContainerStyle={{ paddingBottom: 50 }}
         bounces={false}
         scrollEventThrottle={16}
-        data={data?.data}
+        data={trackList?.data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item: any) => item.id}
         onScroll={useAnimatedScrollHandler((event) => {
           scrollY.value = event.contentOffset.y;
         })}
       />
 
-      {isPlaying && <FloatButton navigation={navigation} />}
+      {isPlaying && <FloatButton />}
     </View>
   );
 };

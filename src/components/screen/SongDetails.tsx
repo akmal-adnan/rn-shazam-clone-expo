@@ -4,7 +4,6 @@ import TrackRelatedSongs from '@/src/components/ui/TrackRelatedSongs';
 import TrackTopSongs from '@/src/components/ui/TrackTopSongs';
 import TrackYoutube from '@/src/components/ui/TrackYoutube';
 import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
-import { useGetTrackDetails } from '@/src/hooks/apiQuery/useGetTrackDetails';
 import { useGetTrackMetaData } from '@/src/hooks/apiQuery/useGetTrackMetaData';
 import { useGetTrackRelated } from '@/src/hooks/apiQuery/useGetTrackRelated';
 import { useHandlePlayTracks } from '@/src/hooks/useHandlePlayTracks';
@@ -37,15 +36,18 @@ type Props = {
   id: number;
 };
 
-const TrackInfo = ['Album', 'Label', 'Released'];
+const TrackInfoLabel = ['Album', 'Label', 'Released'];
 
 const SongDetails = ({ id }: Props) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const isPlaying = usePlayerStore((state) => state.isPlaying);
 
-  const { data: trackDetails } = useGetTrackDetails(id);
-  const trackDetailsId = Number(trackDetails?.data[0].id);
+  // const { data: trackDetails } = useGetTrackDetails(id);
+  // const trackDetailsId = Number(trackDetails?.data[0].id);
+
+  const trackDetailsId = 828086589; // Since free api is reached use this
+
   const { data: trackMetaData } = useGetTrackMetaData(trackDetailsId);
   const { data: trackRelated } = useGetTrackRelated({ id: trackDetailsId });
   const songShazamCount = DATA.TotalShazams;
@@ -90,29 +92,6 @@ const SongDetails = ({ id }: Props) => {
 
     return { opacity };
   });
-
-  // const handlePlay = async () => {
-  //   if (currentTrack?.id === trackMetaData?.key) {
-  //     if (!isPlaying) {
-  //       await TrackPlayer.reset();
-  //       await addTracks(mergeTrack);
-  //       setTracks(mergeTrack);
-  //       setCurrentTrack(oriTrack);
-  //       setPlaying(!isPlaying);
-  //       await TrackPlayer.play();
-  //     } else {
-  //       setPlaying(!isPlaying);
-  //       await TrackPlayer.pause();
-  //     }
-  //   } else {
-  //     await TrackPlayer.reset();
-  //     await addTracks(mergeTrack);
-  //     setTracks(mergeTrack);
-  //     setCurrentTrack(oriTrack);
-  //     setPlaying(true);
-  //     await TrackPlayer.play();
-  //   }
-  // };
 
   const renderHeader = () => (
     <Animated.View
@@ -261,7 +240,7 @@ const SongDetails = ({ id }: Props) => {
 
       <View style={{ height: 1, backgroundColor: COLORS.black6 }} />
 
-      {TrackInfo.map((item, index) => (
+      {TrackInfoLabel.map((item, index) => (
         <React.Fragment key={`${item}-${index}`}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
@@ -338,7 +317,7 @@ const SongDetails = ({ id }: Props) => {
       {/* For auto video player */}
       <Animated.View entering={FadeIn.delay(1200)}>
         {/* <TrackVideo
-          videoUrl={trackMetaData??.highlightsurls?.trackhighlighturl}
+          videoUrl={trackMetaData?.highlightsurls?.trackhighlighturl}
         /> */}
       </Animated.View>
 
@@ -360,7 +339,7 @@ const SongDetails = ({ id }: Props) => {
         <Animated.View layout={LinearTransition}>
           {trackMetaData?.sections[2] && (
             <TrackYoutube
-            // url={trackMetaData??.sections[2].youtubeurl}
+            // url={trackMetaData?.sections[2].youtubeurl}
             />
           )}
         </Animated.View>

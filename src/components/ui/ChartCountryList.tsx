@@ -24,14 +24,9 @@ const ChartCountryList: React.FC<Props> = ({ item }) => {
 
         <TouchableOpacity
           activeOpacity={0.7}
-          //   onPress={() =>
-          //     navigation.push('SubCharts', {
-          //       country: item?.country,
-          //       listid: item?.listid,
-          //     })
-          //   }
-
-          onPress={() => router.navigate('/TrackChart/123')}
+          onPress={() =>
+            router.push(`/TrackChart/${item.listid}?country=${item.country}`)
+          }
         >
           <Text style={styles.see__all}>See all</Text>
         </TouchableOpacity>

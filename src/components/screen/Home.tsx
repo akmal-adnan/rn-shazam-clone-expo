@@ -32,14 +32,6 @@ type HomeProps = {
 const Home = ({ slidesRef }: HomeProps) => {
   const pulse = useSharedValue(1);
   const inset = useSafeAreaInsets();
-  //   const itemId = 3231;
-
-  //   useEffect(() => {
-  //     async function setup() {
-  //       await setupPlayer();
-  //     }
-  //     setup();
-  //   }, []);
 
   // Top component
   const renderTop = () => (
