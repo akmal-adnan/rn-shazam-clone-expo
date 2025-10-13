@@ -10,7 +10,7 @@ type Props = {
 };
 
 // fetch function
-const fetchTopCountrySongs = async ({
+const fetchApi = async ({
   id,
   startFrom = 0,
   pageSize = 10,
@@ -35,6 +35,6 @@ export const useGetTrackRelated = ({
 }: Props) => {
   return useQuery({
     queryKey: queryKeys.trackRelated(id, startFrom, pageSize),
-    queryFn: () => fetchTopCountrySongs({ id, pageSize, startFrom }),
+    queryFn: () => fetchApi({ id, pageSize, startFrom }),
   });
 };
