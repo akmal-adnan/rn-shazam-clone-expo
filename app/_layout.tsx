@@ -34,6 +34,10 @@ export default function RootLayout() {
             name="MusicPlayerScreen"
             options={{ animation: 'slide_from_bottom' }}
           />
+          <Stack.Screen
+            name="TapShazamScreen"
+            options={{ animation: 'fade' }}
+          />
         </Stack>
         <StatusBar style="auto" />
       </SafeAreaProvider>

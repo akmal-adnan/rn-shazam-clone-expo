@@ -13,6 +13,7 @@ import { COLORS, FONTS, IMAGES, SIZES, SVG } from '@/src/constants/index';
 import SearchIco from '@expo/vector-icons/FontAwesome';
 import Icons from '@expo/vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -21,7 +22,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import { setupPlayer } from '../redux/services/PlaybackService';
 
 const AnimatedPress = Animated.createAnimatedComponent(Pressable);
 
@@ -98,7 +98,7 @@ const Home = ({ slidesRef }: HomeProps) => {
       <AnimatedPress
         style={[styles.shazam__logo, styles.shadow, pulseAnimation]}
         onPress={() => {
-          //   navigation.push('TapShazam', { itemId });
+          router.push('/TapShazamScreen');
         }}
       >
         <View>
