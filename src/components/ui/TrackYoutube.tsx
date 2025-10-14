@@ -1,35 +1,59 @@
-import { COLORS, DATA, FONTS, SIZES } from '@/src/constants';
+import { COLORS, FONTS, SIZES } from '@/src/constants';
+import { useGetYoutubeVideo } from '@/src/hooks/apiQuery/useGetYoutubeVideo';
 import MaterialCom from '@expo/vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import {
   ImageBackground,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-// import { useGetSongVideoQuery } from '../redux/services/ShazamCore';
 
 type Props = {
-  url?: string;
+  albumAdamId: number;
+  urlName: string;
 };
 
-const TrackYoutube = ({ url }: Props) => {
-  const modifiedUrl = url?.replace('https://cdn.shazam.com/', '');
-  //   const { data } = useGetSongVideoQuery(modifiedUrl);
-  const data = DATA.TrackYoutube[0];
+const TrackYoutubeComponent = ({ albumAdamId, urlName }: Props) => {
+  // const newUrlName = decodeURIComponent(urlName);
+
+  const { data, isLoading } = useGetYoutubeVideo({
+    id: albumAdamId,
+    nameQuery: urlName,
+  });
+
+  console.log(data, albumAdamId, urlName);
+
+  const handleOpenYoutube = () => {
+    const youtubeUrl = data?.actions?.[0]?.uri;
+    if (youtubeUrl) {
+      Linking.openURL(youtubeUrl);
+    } else {
+      console.warn('No YouTube URL found');
+    }
+  };
+
+  if (!data) {
+    return;
+  }
+
+  if (isLoading) {
+    return;
+  }
 
   return (
     <View style={styles.video__container}>
       <Text style={styles.video__text}>VIDEO</Text>
 
       <ImageBackground
-        source={{ uri: data?.image.url }}
+        source={{ uri: data.image.url }}
         resizeMode="contain"
         imageStyle={{ borderRadius: 10 }}
         style={styles.video__imageBg}
       >
-        <TouchableOpacity activeOpacity={0.8}>
+        <TouchableOpacity activeOpacity={0.8} onPress={handleOpenYoutube}>
           <View style={styles.youtube__icon} />
           <MaterialCom name="youtube" size={80} color="#FE0000" />
         </TouchableOpacity>
@@ -43,6 +67,8 @@ const TrackYoutube = ({ url }: Props) => {
     </View>
   );
 };
+
+const TrackYoutube = React.memo(TrackYoutubeComponent);
 
 export default TrackYoutube;
 

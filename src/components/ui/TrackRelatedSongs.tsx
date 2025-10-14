@@ -25,7 +25,7 @@ type RenderProps = {
   index: number;
 };
 
-const TrackRelatedSongs = ({ trackRelated }: Props) => {
+const TrackRelatedSongsComponent = ({ trackRelated }: Props) => {
   const isPlaying = usePlayerStore((state) => state.isPlaying);
   const { fetchTrackRelated } = useGetTrackRelated();
   const { fetchTrackMetaData } = useGetTrackMetaData();
@@ -45,12 +45,17 @@ const TrackRelatedSongs = ({ trackRelated }: Props) => {
   const renderItemList = ({ item, index }: RenderProps) => {
     const isTrackPlay = isPlaying && currentTrackId === item.key;
 
+    const handlePushRoute = () => {
+      if (item.hub['actions'] === undefined) {
+        console.log('do nothing');
+      } else {
+        router.push(`/SongDetails/${item.hub.actions[0].id}`);
+      }
+    };
+
     return (
       <View style={{ paddingLeft: index === 0 ? 16 : 0, paddingRight: 16 }}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => router.push(`/SongDetails/${item.hub.actions[0].id}`)}
-        >
+        <TouchableOpacity activeOpacity={0.8} onPress={handlePushRoute}>
           <ImageBackground
             source={{
               uri: item?.images?.coverart,
@@ -138,6 +143,8 @@ const TrackRelatedSongs = ({ trackRelated }: Props) => {
     </>
   );
 };
+
+const TrackRelatedSongs = React.memo(TrackRelatedSongsComponent);
 
 export default TrackRelatedSongs;
 

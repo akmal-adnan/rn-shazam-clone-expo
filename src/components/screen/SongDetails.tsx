@@ -4,6 +4,7 @@ import TrackRelatedSongs from '@/src/components/ui/TrackRelatedSongs';
 import TrackTopSongs from '@/src/components/ui/TrackTopSongs';
 import TrackYoutube from '@/src/components/ui/TrackYoutube';
 import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
+import { useGetTrackDetails } from '@/src/hooks/apiQuery/useGetTrackDetails';
 import { useGetTrackMetaData } from '@/src/hooks/apiQuery/useGetTrackMetaData';
 import { useGetTrackRelated } from '@/src/hooks/apiQuery/useGetTrackRelated';
 import { useHandlePlayTracks } from '@/src/hooks/useHandlePlayTracks';
@@ -40,10 +41,10 @@ const TrackInfoLabel = ['Album', 'Label', 'Released'];
 const SongDetails = ({ id }: Props) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
-  // const { data: trackDetails } = useGetTrackDetails(id);
-  // const trackDetailsId = Number(trackDetails?.data[0].id);
+  const { data: trackDetails } = useGetTrackDetails(id);
+  const trackDetailsId = Number(trackDetails?.data[0].id);
 
-  const trackDetailsId = 828086589; // If shazam core api key reached limit
+  // const trackDetailsId = 828086589; // If shazam core api key reached limit
 
   const { data: trackMetaData } = useGetTrackMetaData({
     id: trackDetailsId,
@@ -58,6 +59,8 @@ const SongDetails = ({ id }: Props) => {
   const { handlePlayTracks, currentTrackId, isPlaying } = useHandlePlayTracks();
 
   const isTrackPlay = isPlaying && currentTrackId === trackMetaData?.key;
+
+  const rawTitle = trackMetaData?.urlparams?.['{tracktitle}'];
 
   const animateHeader = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -337,13 +340,14 @@ const SongDetails = ({ id }: Props) => {
           </Animated.View>
         )}
 
-        <Animated.View layout={LinearTransition}>
-          {trackMetaData?.sections[2] && (
+        {rawTitle && trackMetaData.albumadamid && (
+          <Animated.View layout={LinearTransition}>
             <TrackYoutube
-            // url={trackMetaData?.sections[2].youtubeurl}
+              urlName={rawTitle}
+              albumAdamId={Number(trackMetaData.albumadamid)}
             />
-          )}
-        </Animated.View>
+          </Animated.View>
+        )}
 
         {trackMetaData && trackRelated && (
           <Animated.View layout={LinearTransition}>

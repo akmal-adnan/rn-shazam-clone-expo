@@ -22,4 +22,10 @@ export const queryKeys = {
     startFrom,
     pageSize,
   ],
+
+  trackYoutube: (id: number, nameQuery: string) => [
+    'trackYoutube',
+    id,
+    nameQuery,
+  ],
 };

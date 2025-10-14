@@ -19,7 +19,7 @@ type Props = {
   adamid?: string;
 };
 
-const TrackTopSongs = ({ adamid }: Props) => {
+const TrackTopSongsComponent = ({ adamid }: Props) => {
   const { data: topSong } = useGetTrackTopFeatured(Number(adamid));
   const isPlaying = usePlayerStore((state) => state.isPlaying);
   const trackList = topSong?.data[0].views['top-songs'].data;
@@ -95,6 +95,8 @@ const TrackTopSongs = ({ adamid }: Props) => {
     </Animated.View>
   );
 };
+
+const TrackTopSongs = React.memo(TrackTopSongsComponent);
 
 export default TrackTopSongs;
 
