@@ -12,6 +12,7 @@ type HandlePlayParams = {
 
 export const useHandlePlayTracks = () => {
   const { setTracks, setCurrentTrack, setPlaying } = usePlayerStore();
+  const isPlaying = usePlayerStore((state) => state.isPlaying);
   const currentTrack = usePlayerStore((state) => state.currentTrack);
   const currentTrackId = currentTrack?.id;
 
@@ -68,5 +69,5 @@ export const useHandlePlayTracks = () => {
     [currentTrackId, setTracks, setCurrentTrack, setPlaying]
   );
 
-  return { handlePlayTracks, currentTrackId };
+  return { handlePlayTracks, currentTrackId, isPlaying };
 };

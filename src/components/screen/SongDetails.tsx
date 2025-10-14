@@ -4,11 +4,9 @@ import TrackRelatedSongs from '@/src/components/ui/TrackRelatedSongs';
 import TrackTopSongs from '@/src/components/ui/TrackTopSongs';
 import TrackYoutube from '@/src/components/ui/TrackYoutube';
 import { COLORS, DATA, FONTS, SIZES, SVG } from '@/src/constants';
-import { useGetTrackDetails } from '@/src/hooks/apiQuery/useGetTrackDetails';
 import { useGetTrackMetaData } from '@/src/hooks/apiQuery/useGetTrackMetaData';
 import { useGetTrackRelated } from '@/src/hooks/apiQuery/useGetTrackRelated';
 import { useHandlePlayTracks } from '@/src/hooks/useHandlePlayTracks';
-import { usePlayerStore } from '@/src/store/usePlayerStore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCom from '@expo/vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -42,11 +40,10 @@ const TrackInfoLabel = ['Album', 'Label', 'Released'];
 const SongDetails = ({ id }: Props) => {
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
-  const isPlaying = usePlayerStore((state) => state.isPlaying);
-  const { data: trackDetails } = useGetTrackDetails(id);
-  const trackDetailsId = Number(trackDetails?.data[0].id);
+  // const { data: trackDetails } = useGetTrackDetails(id);
+  // const trackDetailsId = Number(trackDetails?.data[0].id);
 
-  // const trackDetailsId = 828086589; // If shazam core api key reached limit
+  const trackDetailsId = 828086589; // If shazam core api key reached limit
 
   const { data: trackMetaData } = useGetTrackMetaData({
     id: trackDetailsId,
@@ -58,7 +55,9 @@ const SongDetails = ({ id }: Props) => {
   });
   const songShazamCount = DATA.TotalShazams;
 
-  const { handlePlayTracks } = useHandlePlayTracks();
+  const { handlePlayTracks, currentTrackId, isPlaying } = useHandlePlayTracks();
+
+  const isTrackPlay = isPlaying && currentTrackId === trackMetaData?.key;
 
   const animateHeader = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -207,12 +206,11 @@ const SongDetails = ({ id }: Props) => {
             height: 50,
             justifyContent: 'center',
             alignItems: 'center',
-            paddingLeft: 3,
             marginBottom: 55,
           }}
         >
           <Ionicons
-            name={isPlaying ? 'pause' : 'play'}
+            name={isTrackPlay ? 'pause' : 'play'}
             size={21}
             color={COLORS.white1}
           />

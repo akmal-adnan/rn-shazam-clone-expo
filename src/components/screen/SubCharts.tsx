@@ -71,14 +71,6 @@ const SubCharts = ({ countryId, country }: Props) => {
     return (
       <Animated.View entering={FadeIn}>
         <TouchableOpacity
-          // onPress={() =>
-          //   navigation.push('SongDetails', {
-          //     songId: item?.id,
-          //     songImage: imageUrl,
-          //   })
-          // }
-          // onLongPress={() => console.log('Multiselect action')}
-
           onPress={() => router.push(`/SongDetails/${item.id}`)}
           activeOpacity={0.7}
           style={{
