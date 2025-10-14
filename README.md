@@ -4,6 +4,10 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 #### This project is updated version from the old [RN-shazam-clone](https://github.com/akmal-adnan/RN-shazam-clone)
 
+## Preview
+### [Watch this video on YouTube](https://youtu.be/BO7ZUP-Zdu8)
+[![Watch the video](https://img.youtube.com/vi/BO7ZUP-Zdu8/maxresdefault.jpg)](https://youtu.be/BO7ZUP-Zdu8)
+
 ## Result Sample
 
 <!-- <video src="readme_assets/screen_record.mp4" width="300" controls></video> -->
@@ -18,6 +22,12 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 </p>
 
 ## Get started
+#### Before get started
+- Create `.env` file first in root folder and put api key
+- Free Api key get from [Shazam Core API](https://rapidapi.com/tipsters/api/shazam-core)
+```
+EXPO_PUBLIC_API_KEY: APIKEYHERE123
+```
 
 1. Install dependencies
 
@@ -25,17 +35,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Run the app using expo go
-
-   ```bash
-   npx expo start
-
-   or
-
-   npm start
-   ```
-
-3. Run the app using without expo go
+2. Run the app using without expo go (development mode)
 
    For ios:
 
@@ -63,10 +63,11 @@ Since this project is still incomplete ~
 
 ### Todo:
 
-1. Complete more screen
-2. Add audio player
-3. Use real data from API
+1. ~~Complete more screen~~
+2. ~~Add audio player~~
+3. ~~Use real data from API~~
 4. Code clean up
+5. Add music recognition feature
 
 ---
 
