@@ -1,3 +1,9 @@
+import { COLORS, FONTS, SIZES, SVG } from '@/src/constants';
+import { useGetTrackTopFeatured } from '@/src/hooks/apiQuery/useGetTrackTopFeatured';
+import { useHandleTopTrackPlay } from '@/src/hooks/useHandleTopTrackPlay';
+import { usePlayerStore } from '@/src/store/usePlayerStore';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { router } from 'expo-router';
 import React from 'react';
 import {
   ImageBackground,
@@ -8,59 +14,17 @@ import {
   View,
 } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
-// import TrackPlayer from 'react-native-track-player';
-import Ionicons from '@expo/vector-icons/Ionicons';
-// import { useDispatch } from 'react-redux';
-import { COLORS, FONTS, SIZES, SVG } from '@/src/constants';
-import { useGetTrackTopFeatured } from '@/src/hooks/apiQuery/useGetTrackTopFeatured';
-// import { useGetTopSongRelatedQuery } from '../redux/services/ShazamCore';
 
 type Props = {
   adamid?: string;
 };
 
 const TrackTopSongs = ({ adamid }: Props) => {
-  //   const { data: topSong } = useGetTopSongRelatedQuery(adamid);
-  //   const { isPlaying, currentTrack } = useSelector((state) => state.player);
-  //   const dispatch = useDispatch();
-  // const topSong = DATA.FeaturedSongs;
-
   const { data: topSong } = useGetTrackTopFeatured(Number(adamid));
-
-  const TRACK = topSong?.data[0].views['top-songs'].data
-    .map((track) => ({
-      id: track?.id,
-      url: track?.attributes.previews[0].url,
-      title: track?.attributes.name,
-      artist: track?.attributes.artistName,
-      images: track?.attributes.artwork.url
-        .replace('{w}', '400')
-        .replace('{h}', '400'),
-    }))
-    .filter((track) => track.images !== undefined && track.url !== undefined);
-
-  //   const handlePlay = async (oriTrack, uniqueTracks) => {
-  //     if (currentTrack.id === oriTrack.id) {
-  //       if (!isPlaying) {
-  //         await TrackPlayer.reset();
-  //         await addTracks(uniqueTracks);
-  //         dispatch(setTracks(uniqueTracks));
-  //         dispatch(setCurrentTrack(oriTrack));
-  //         dispatch(setPlaying(!isPlaying));
-  //         await TrackPlayer.play();
-  //       } else {
-  //         dispatch(setPlaying(!isPlaying));
-  //         await TrackPlayer.pause();
-  //       }
-  //     } else {
-  //       await TrackPlayer.reset();
-  //       await addTracks(uniqueTracks);
-  //       dispatch(setTracks(uniqueTracks));
-  //       dispatch(setCurrentTrack(oriTrack));
-  //       dispatch(setPlaying(true));
-  //       await TrackPlayer.play();
-  //     }
-  //   };
+  const isPlaying = usePlayerStore((state) => state.isPlaying);
+  const trackList = topSong?.data[0].views['top-songs'].data;
+  const { handleTopTrackPlay, currentTrackId } =
+    useHandleTopTrackPlay(trackList);
 
   return (
     <Animated.View
@@ -71,33 +35,15 @@ const TrackTopSongs = ({ adamid }: Props) => {
 
       <ScrollView horizontal bounces={false}>
         <View style={styles.list__container}>
-          {topSong?.data[0].views['top-songs'].data.map((item) => {
-            const oriTrack = {
-              id: item?.id,
-              url: item?.attributes.previews[0].url,
-              title: item?.attributes.name,
-              artist: item?.attributes.artistName,
-              images: item?.attributes.artwork.url
-                .replace('{w}', '400')
-                .replace('{h}', '400'),
-            };
-
-            // Merge track with original list
-            const mergeTrack = [oriTrack].concat(TRACK);
-            // Remove duplicate tracks based on ID
-            const uniqueTracks = mergeTrack.filter(
-              (track, index, self) =>
-                self.findIndex((t) => t.id === track.id) === index
-            );
+          {trackList?.map((item) => {
+            const isTrackPlay = isPlaying && currentTrackId === item.id;
 
             return (
               <TouchableOpacity
                 key={item.id}
                 activeOpacity={0.8}
                 style={styles.song__container}
-                // onPress={() =>
-                //   navigation.push('SongDetails', { songId: item.id })
-                // }
+                onPress={() => router.push(`/SongDetails/${item.id}`)}
               >
                 <ImageBackground
                   source={{
@@ -110,20 +56,15 @@ const TrackTopSongs = ({ adamid }: Props) => {
                   style={styles.image__container}
                 >
                   <TouchableOpacity
-                    // onPress={() => handlePlay(oriTrack, uniqueTracks)}
+                    onPress={() => handleTopTrackPlay(item)}
                     activeOpacity={0.7}
                     style={styles.play__button}
                   >
-                    {/* {item.id === currentTrack.id ? (
-                      <Ionicons
-                        name={isPlaying ? 'pause' : 'play'}
-                        size={21}
-                        color={COLORS.white1}
-                      />
-                    ) : (
-                      <Ionicons name="play" size={21} color={COLORS.white1} />
-                    )} */}
-                    <Ionicons name="play" size={21} color={COLORS.white1} />
+                    <Ionicons
+                      name={isTrackPlay ? 'pause' : 'play'}
+                      size={21}
+                      color={COLORS.white1}
+                    />
                   </TouchableOpacity>
                 </ImageBackground>
 

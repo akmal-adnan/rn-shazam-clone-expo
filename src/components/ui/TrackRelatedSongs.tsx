@@ -27,8 +27,8 @@ type RenderProps = {
 
 const TrackRelatedSongs = ({ trackRelated }: Props) => {
   const isPlaying = usePlayerStore((state) => state.isPlaying);
-  const { fetchTrackRelated } = useGetTrackRelated({});
-  const { fetchTrackMetaData } = useGetTrackMetaData({});
+  const { fetchTrackRelated } = useGetTrackRelated();
+  const { fetchTrackMetaData } = useGetTrackMetaData();
   const { handlePlayTracks, currentTrackId } = useHandlePlayTracks();
 
   const handlePlaySong = async (currentIndex: number) => {

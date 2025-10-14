@@ -333,11 +333,11 @@ const SongDetails = ({ id }: Props) => {
       >
         {renderItemTop()}
 
-        <Animated.View layout={LinearTransition}>
-          {trackMetaData?.artists[0].adamid && (
+        {trackMetaData?.artists[0].adamid && (
+          <Animated.View layout={LinearTransition}>
             <TrackTopSongs adamid={trackMetaData.artists[0].adamid} />
-          )}
-        </Animated.View>
+          </Animated.View>
+        )}
 
         <Animated.View layout={LinearTransition}>
           {trackMetaData?.sections[2] && (
