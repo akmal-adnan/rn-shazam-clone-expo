@@ -18,10 +18,7 @@ import FloatButton from '@/src/components/ui/FloatButton';
 import Header from '@/src/components/ui/Header';
 import { COLORS, FONTS, SIZES, SVG } from '@/src/constants';
 import { useGetTopTrackCharts } from '@/src/hooks/apiQuery/useGetTopTrackCharts';
-import { useGetTrackMetaData } from '@/src/hooks/apiQuery/useGetTrackMetaData';
-import { useGetTrackRelated } from '@/src/hooks/apiQuery/useGetTrackRelated';
-import { useHandlePlayTracks } from '@/src/hooks/useHandlePlayTracks';
-import { usePlayerStore } from '@/src/store/usePlayerStore';
+import { useHandleTopTrackPlay } from '@/src/hooks/useHandleTopTrackPlay';
 import { router } from 'expo-router';
 import { Song } from '../modules/TrackTopCharts';
 
@@ -39,21 +36,14 @@ type RenderProps = {
 
 const SubCharts = ({ countryId, country }: Props) => {
   const scrollY = useSharedValue(0);
-  const isPlaying = usePlayerStore((state) => state.isPlaying);
-
-  const trackDetailsId = 828086589; // Since free api is reached use this
-  const { data: trackMetaData } = useGetTrackMetaData(trackDetailsId);
-  const { data: trackRelated } = useGetTrackRelated({ id: trackDetailsId });
-
-  const { data: trackList } = useGetTopTrackCharts({
+  const { data: currentList } = useGetTopTrackCharts({
     countryId,
     limit: 20,
   });
+  const trackList = currentList?.data;
 
-  const { handlePlayTracks } = useHandlePlayTracks({
-    trackRelated,
-    trackMetaData,
-  });
+  const { handleTopTrackPlay, currentTrackId, isPlaying } =
+    useHandleTopTrackPlay(trackList);
 
   const renderButton = () => (
     <View style={{ paddingVertical: 15, alignItems: 'center' }}>
@@ -75,6 +65,8 @@ const SubCharts = ({ countryId, country }: Props) => {
     const imageUrl = item?.attributes?.artwork.url
       .replace('{w}', '400')
       .replace('{h}', '400');
+
+    const isTrackPlay = isPlaying && currentTrackId === item.id;
 
     return (
       <Animated.View entering={FadeIn}>
@@ -120,7 +112,7 @@ const SubCharts = ({ countryId, country }: Props) => {
             </View>
 
             <TouchableOpacity
-              onPress={() => handlePlayTracks()}
+              onPress={() => handleTopTrackPlay(item)}
               activeOpacity={0.7}
               style={{
                 backgroundColor: 'rgba(0,0,0,0.6)',
@@ -132,7 +124,7 @@ const SubCharts = ({ countryId, country }: Props) => {
               }}
             >
               <Ionicons
-                name={isPlaying ? 'pause' : 'play'}
+                name={isTrackPlay ? 'pause' : 'play'}
                 size={18}
                 color={COLORS.white1}
               />
@@ -214,7 +206,7 @@ const SubCharts = ({ countryId, country }: Props) => {
         contentContainerStyle={{ paddingBottom: 50 }}
         bounces={false}
         scrollEventThrottle={16}
-        data={trackList?.data}
+        data={trackList}
         renderItem={renderItem}
         keyExtractor={(item: any) => item.id}
         onScroll={useAnimatedScrollHandler((event) => {
