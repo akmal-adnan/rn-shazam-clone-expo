@@ -48,14 +48,17 @@ const SongDetails = ({ id }: Props) => {
 
   const trackDetailsId = 828086589; // Since free api is reached use this
 
-  const { data: trackMetaData } = useGetTrackMetaData(trackDetailsId);
-  const { data: trackRelated } = useGetTrackRelated({ id: trackDetailsId });
+  const { data: trackMetaData } = useGetTrackMetaData({
+    id: trackDetailsId,
+    enabled: true,
+  });
+  const { data: trackRelated } = useGetTrackRelated({
+    id: trackDetailsId,
+    enabled: true,
+  });
   const songShazamCount = DATA.TotalShazams;
 
-  const { handlePlayTracks } = useHandlePlayTracks({
-    trackRelated,
-    trackMetaData,
-  });
+  const { handlePlayTracks } = useHandlePlayTracks();
 
   const animateHeader = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -195,7 +198,7 @@ const SongDetails = ({ id }: Props) => {
         </View>
 
         <TouchableOpacity
-          onPress={handlePlayTracks}
+          onPress={() => handlePlayTracks({ trackMetaData, trackRelated })}
           activeOpacity={0.7}
           style={{
             backgroundColor: 'rgba(212,212,212,0.13)',
@@ -344,9 +347,11 @@ const SongDetails = ({ id }: Props) => {
           )}
         </Animated.View>
 
-        <Animated.View layout={LinearTransition}>
-          <TrackRelatedSongs />
-        </Animated.View>
+        {trackMetaData && trackRelated && (
+          <Animated.View layout={LinearTransition}>
+            <TrackRelatedSongs trackRelated={trackRelated} />
+          </Animated.View>
+        )}
 
         <Animated.View layout={LinearTransition}>
           {renderFooter()}

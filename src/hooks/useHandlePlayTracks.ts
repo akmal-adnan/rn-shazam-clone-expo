@@ -1,61 +1,72 @@
 import { TrackMetaDataResponse } from '@/src/components/modules/TrackMetdaData';
 import { TrackRelatedResponse } from '@/src/components/modules/TrackRelated';
 import { addTracks } from '@/src/hooks/useAddTracks';
-import TrackPlayer from 'react-native-track-player';
+import { useCallback } from 'react';
+import TrackPlayer, { State } from 'react-native-track-player';
 import { usePlayerStore } from '../store/usePlayerStore';
 
-type Props = {
-  trackRelated?: TrackRelatedResponse;
+type HandlePlayParams = {
   trackMetaData?: TrackMetaDataResponse;
+  trackRelated?: TrackRelatedResponse;
 };
 
-export const useHandlePlayTracks = ({ trackRelated, trackMetaData }: Props) => {
+export const useHandlePlayTracks = () => {
   const { setTracks, setCurrentTrack, setPlaying } = usePlayerStore();
-  const isPlaying = usePlayerStore((state) => state.isPlaying);
   const currentTrack = usePlayerStore((state) => state.currentTrack);
+  const currentTrackId = currentTrack?.id;
 
-  const TRACK = trackRelated?.tracks
-    ?.map((track) => ({
-      id: track?.key,
-      url: track?.hub?.actions?.find((action) => action.type === 'uri')?.uri,
-      title: track?.title,
-      artist: track?.subtitle,
-      images: track?.images?.coverart,
-    }))
-    .filter((track) => track.images !== undefined && track.url !== undefined);
+  const handlePlayTracks = useCallback(
+    async ({ trackMetaData, trackRelated }: HandlePlayParams) => {
+      if (!trackMetaData) return console.warn('Missing track metadata');
 
-  const oriTrack = {
-    id: trackMetaData?.key,
-    url: trackMetaData?.hub?.actions?.find((action) => action.type === 'uri')
-      ?.uri,
-    title: trackMetaData?.title,
-    artist: trackMetaData?.subtitle,
-    images: trackMetaData?.images?.coverart ?? '',
-  };
+      const oriTrack = {
+        id: trackMetaData.key,
+        url: trackMetaData.hub?.actions?.find((a) => a.type === 'uri')?.uri,
+        title: trackMetaData.title,
+        artist: trackMetaData.subtitle,
+        images: trackMetaData.images?.coverart ?? '',
+      };
 
-  const mergeTrack = [oriTrack].concat(TRACK ?? []);
-  const handlePlayTracks = async () => {
-    if (currentTrack?.id === trackMetaData?.key) {
-      if (!isPlaying) {
-        await TrackPlayer.reset();
-        await addTracks(mergeTrack);
-        setTracks(mergeTrack);
-        setCurrentTrack(oriTrack);
-        setPlaying(!isPlaying);
-        await TrackPlayer.play();
-      } else {
-        setPlaying(!isPlaying);
-        await TrackPlayer.pause();
+      if (!oriTrack.url) {
+        console.warn('Missing playable URL for this track');
+        return;
       }
-    } else {
+
+      const TRACK =
+        trackRelated?.tracks
+          ?.map((track) => ({
+            id: track?.key,
+            url: track?.hub?.actions?.find((a) => a.type === 'uri')?.uri,
+            title: track?.title,
+            artist: track?.subtitle,
+            images: track?.images?.coverart,
+          }))
+          .filter((t) => t.url && t.images) ?? [];
+
+      const mergeTrack = [oriTrack, ...TRACK];
+
+      const playerState = await TrackPlayer.getState();
+
+      if (currentTrackId === trackMetaData.key) {
+        if (playerState === State.Playing) {
+          await TrackPlayer.pause();
+          setPlaying(false);
+        } else {
+          await TrackPlayer.play();
+          setPlaying(true);
+        }
+        return;
+      }
+
       await TrackPlayer.reset();
       await addTracks(mergeTrack);
       setTracks(mergeTrack);
       setCurrentTrack(oriTrack);
       setPlaying(true);
       await TrackPlayer.play();
-    }
-  };
+    },
+    [currentTrackId, setTracks, setCurrentTrack, setPlaying]
+  );
 
-  return { handlePlayTracks };
+  return { handlePlayTracks, currentTrackId };
 };
