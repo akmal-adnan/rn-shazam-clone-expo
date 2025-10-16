@@ -24,8 +24,6 @@ const TrackYoutubeComponent = ({ albumAdamId, urlName }: Props) => {
     nameQuery: urlName,
   });
 
-  console.log(data, albumAdamId, urlName);
-
   const handleOpenYoutube = () => {
     const youtubeUrl = data?.actions?.[0]?.uri;
     if (youtubeUrl) {
